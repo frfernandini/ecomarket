@@ -16,6 +16,7 @@
     <modules>
         <module>msvc-proveedores</module>
         <module>msvc-productos</module>
+        <module>msvc-usuarios</module>
     </modules>
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
