@@ -47,6 +47,8 @@ public class UsuarioServicesImpl implements UsuarioService{
             u.setContraseña(usuarios.getContraseña());
             u.setRegistroUsuario(usuarios.getRegistroUsuario());
             return usuarioRepository.save(u);
-        })
+        }).orElseThrow(
+                () -> new UsuarioExceptions("El usuario con id "+id+" no existe")
+        );
     }
 }
