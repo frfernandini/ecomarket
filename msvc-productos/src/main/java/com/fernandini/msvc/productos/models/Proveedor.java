@@ -1,5 +1,19 @@
 package com.fernandini.msvc.productos.models;
 
-public class Proveedor {
+import lombok.*;
 
+import java.util.Date;
+@Getter @Setter @AllArgsConstructor @NoArgsConstructor @ToString
+public class Proveedor {
+    private Long id;
+
+    private String nombre;
+
+    private String direccion;
+
+    private String telefono;
+
+    private String correo;
+
+    private Date fecha_ingreso;
 }

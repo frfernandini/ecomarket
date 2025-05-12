@@ -3,7 +3,9 @@ package com.fernandini.msvc.productos.services;
 import com.fernandini.msvc.productos.clients.ProveedorClientRest;
 import com.fernandini.msvc.productos.exceptions.ProductoException;
 import com.fernandini.msvc.productos.models.Producto;
+import com.fernandini.msvc.productos.models.Proveedor;
 import com.fernandini.msvc.productos.repositories.ProductoRepository;
+import feign.FeignException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +35,12 @@ public class ProductoServiceImpl implements ProductoService{
 
     @Override
     public Producto save(Producto producto) {
-
+        try {
+            Proveedor proveedor = this.proveedorClientRest.findById(producto.getProveedorId());
+            return this.productoRepository.save(producto);
+        }catch (FeignException ex) {
+            throw new ProductoException(ex.getMessage());
+        }
     }
 
     @Override

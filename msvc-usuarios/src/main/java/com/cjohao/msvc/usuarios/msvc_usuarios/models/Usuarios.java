@@ -20,8 +20,8 @@ public class Usuarios {
 
     @Column(name = "run_usuario",nullable = false,unique = true)
     @NotBlank(message = "El campo run no puede estar vacio")
-    @Pattern(regexp = "\\d{1,8}-[\\dKk]", message = "El formato del run paciente debe ser XXXXXXXX-X")
-    private String runUsuario;
+    @Pattern(regexp = "\\d{1,8}-[\\dKk]", message = "El formato del run usuario debe ser XXXXXXXX-X")
+    private String run;
 
     @Column(name = "nombres_usuario",nullable = false)
     @NotBlank(message = "El campo nombres no puede estar vacio")

@@ -10,7 +10,10 @@ import lombok.*;
 import java.util.Date;
 
 @Entity
-@Getter @Setter @ToString @AllArgsConstructor
+@Getter
+@Setter
+@ToString
+@AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "productos")
 public class Producto {
@@ -43,4 +46,61 @@ public class Producto {
     @Column(name = "proveedor_id",nullable = false)
     @NotNull(message = "el campo de id de proveedor no puede estar vacio")
     private Long proveedorId;
+
+
+    public Long getProductoId() {
+        return productoId;
+    }
+
+    public void setProductoId(Long productoId) {
+        this.productoId = productoId;
+    }
+
+    public String getNombreProducto() {
+        return nombreProducto;
+    }
+
+    public void setNombreProducto(String nombreProducto) {
+        this.nombreProducto = nombreProducto;
+    }
+
+    public String getDescProducto() {
+        return descProducto;
+    }
+
+    public void setDescProducto(String descProducto) {
+        this.descProducto = descProducto;
+    }
+
+    public Double getPrecioProducto() {
+        return precioProducto;
+    }
+
+    public void setPrecioProducto(Double precioProducto) {
+        this.precioProducto = precioProducto;
+    }
+
+    public String getCategoriaProducto() {
+        return categoriaProducto;
+    }
+
+    public void setCategoriaProducto(String categoriaProducto) {
+        this.categoriaProducto = categoriaProducto;
+    }
+
+    public Date getFechaIngresoProducto() {
+        return fechaIngresoProducto;
+    }
+
+    public void setFechaIngresoProducto(Date fechaIngresoProducto) {
+        this.fechaIngresoProducto = fechaIngresoProducto;
+    }
+
+    public Long getProveedorId() {
+        return proveedorId;
+    }
+
+    public void setProveedorId(Long proveedorId) {
+        this.proveedorId = proveedorId;
+    }
 }

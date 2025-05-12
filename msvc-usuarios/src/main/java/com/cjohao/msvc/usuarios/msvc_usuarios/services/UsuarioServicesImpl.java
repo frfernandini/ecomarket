@@ -24,11 +24,18 @@ public class UsuarioServicesImpl implements UsuarioService{
     }
 
     @Override
+    public Usuarios findByRun(String run) {
+        return usuarioRepository.findByRun(run).orElseThrow(
+                () -> new UsuarioExceptions("El usuario con run "+run+" no existe")
+        );
+    }
+
+    @Override
     public Usuarios save(Usuarios usuarios) {
         if(usuarioRepository.findById(usuarios.getIdUsuario()).isPresent()){
             throw new RuntimeException("El usuario con este ID ya existe");
         }
-        if(usuarioRepository.findByRun(usuarios.getRunUsuario()).isPresent()){
+        if(usuarioRepository.findByRun(usuarios.getRun()).isPresent()){
             throw new RuntimeException("El usuario con este RUN ya existe");
         }
         return usuarioRepository.save(usuarios);
@@ -40,7 +47,7 @@ public class UsuarioServicesImpl implements UsuarioService{
     @Override
     public Usuarios update(Long id, Usuarios usuarios) {
         return usuarioRepository.findById(id).map(u->{
-            u.setRunUsuario(usuarios.getRunUsuario());
+            u.setRun(usuarios.getRun());
             u.setNombresUsuario(usuarios.getNombresUsuario());
             u.setApellidosUsuario(usuarios.getApellidosUsuario());
             u.setCorreoUsuario(usuarios.getCorreoUsuario());
