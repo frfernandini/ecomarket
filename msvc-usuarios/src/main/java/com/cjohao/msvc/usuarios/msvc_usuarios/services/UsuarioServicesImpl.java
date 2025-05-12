@@ -24,6 +24,13 @@ public class UsuarioServicesImpl implements UsuarioService{
     }
 
     @Override
+    public Usuarios findByRun(String run) {
+        return usuarioRepository.findByRun(run).orElseThrow(
+                () -> new UsuarioExceptions("El usuario con run "+run+" no existe")
+        );
+    }
+
+    @Override
     public Usuarios save(Usuarios usuarios) {
         if(usuarioRepository.findById(usuarios.getIdUsuario()).isPresent()){
             throw new RuntimeException("El usuario con este ID ya existe");
