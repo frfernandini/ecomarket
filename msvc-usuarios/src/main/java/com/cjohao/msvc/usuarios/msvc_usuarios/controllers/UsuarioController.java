@@ -19,45 +19,45 @@ public class UsuarioController {
 
 
     @Autowired
-    private UsuarioService usuarioService;
+    public UsuarioService usuarioService;
 
     @GetMapping
-    private ResponseEntity<List<Usuarios>> findByAll() {
+    public ResponseEntity<List<Usuarios>> findByAll() {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(usuarioService.findAll());
     }
 
     @GetMapping("/{id}")
-    private ResponseEntity<Usuarios> findById(@PathVariable Long id) {
+    public ResponseEntity<Usuarios> findById(@PathVariable Long id) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(usuarioService.findById(id));
     }
 
     @GetMapping("/run/{runUsuario}")
-    private ResponseEntity<Usuarios> findByrun(@PathVariable String run) {
+    public ResponseEntity<Usuarios> findByRun(@PathVariable String runUsuario) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(usuarioService.findByRun(run));
+                .body(usuarioService.findByRun(runUsuario));
     }
 
     @PostMapping
-    private ResponseEntity<Usuarios> save(@Valid @RequestBody Usuarios usuarios) {
+    public ResponseEntity<Usuarios> save(@Valid @RequestBody Usuarios usuarios) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(usuarioService.save(usuarios));
     }
 
     @PutMapping("/{id}")
-    private ResponseEntity<Usuarios> update(@PathVariable Long id, @Valid @RequestBody Usuarios usuarios) {
+    public ResponseEntity<Usuarios> update(@PathVariable Long id, @Valid @RequestBody Usuarios usuarios) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(usuarioService.update(id,usuarios));
     }
 
     @DeleteMapping("/{id}")
-    private ResponseEntity<Void> deleteById(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         usuarioService.deleteById(id);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)

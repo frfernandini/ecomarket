@@ -2,6 +2,7 @@ package com.cjohao.msvc.usuarios.msvc_usuarios.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
@@ -40,6 +41,6 @@ public class Usuarios {
     private String contraseña;
 
     @Column(name = "registro_usuario",nullable = false,unique = true)
-    @NotBlank(message = "El campo registro no puede estar vacio")
+    @NotNull(message = "La fecha de registro no puede ser nula")
     private LocalDate registroUsuario;
 }

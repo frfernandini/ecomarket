@@ -31,14 +31,11 @@ public class UsuarioServicesImpl implements UsuarioService{
     }
 
     @Override
-    public Usuarios save(Usuarios usuarios) {
-        if(usuarioRepository.findById(usuarios.getIdUsuario()).isPresent()){
-            throw new RuntimeException("El usuario con este ID ya existe");
+    public Usuarios save(Usuarios usuario) {
+        if(usuarioRepository.findByRun(usuario.getRun()).isPresent()){
+            throw new UsuarioExceptions("El usuario con este RUN ya existe");
         }
-        if(usuarioRepository.findByRun(usuarios.getRun()).isPresent()){
-            throw new RuntimeException("El usuario con este RUN ya existe");
-        }
-        return usuarioRepository.save(usuarios);
+        return usuarioRepository.save(usuario);
     }
 
     @Override
