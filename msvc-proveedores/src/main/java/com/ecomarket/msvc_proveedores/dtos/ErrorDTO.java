@@ -19,7 +19,7 @@ public class ErrorDTO {
         return "{" +
                 "status:"+status+
                 "date:"+date+
-                "erros:"+errors+
+                "errors:"+errors+
                 "}";
     }
 

@@ -44,12 +44,20 @@ public class ProductoServiceImpl implements ProductoService{
     }
 
     @Override
-    public void deleteById(Producto producto) {
-
+    public void deleteById(Long id) {
+        productoRepository.deleteById(id);
     }
 
     @Override
-    public Producto update(Producto producto) {
-        return null;
+    public Producto update(Long id,Producto producto) {
+        return productoRepository.findById(id).map(p -> {
+            p.setNombreProducto(producto.getNombreProducto());
+            p.setDescProducto(producto.getDescProducto());
+            p.setCategoriaProducto(producto.getCategoriaProducto());
+            p.setPrecioProducto(producto.getPrecioProducto());
+            return productoRepository.save(p);
+        } ).orElseThrow(
+                () -> new ProductoException("Paciente con id"+id+"no encontrado")
+        );
     }
 }

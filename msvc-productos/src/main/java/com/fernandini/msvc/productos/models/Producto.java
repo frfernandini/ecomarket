@@ -39,10 +39,6 @@ public class Producto {
     @NotBlank(message = "el campo de categoria del producto no puede estar vacio")
     private String categoriaProducto;
 
-    @Column(name = "fecha_ingreso_producto",nullable = false)
-    @NotNull(message = "el campo de fecha de ingreso no puede estar vacio")
-    private Date fechaIngresoProducto;
-
     @Column(name = "proveedor_id",nullable = false)
     @NotNull(message = "el campo de id de proveedor no puede estar vacio")
     private Long proveedorId;
@@ -86,14 +82,6 @@ public class Producto {
 
     public void setCategoriaProducto(String categoriaProducto) {
         this.categoriaProducto = categoriaProducto;
-    }
-
-    public Date getFechaIngresoProducto() {
-        return fechaIngresoProducto;
-    }
-
-    public void setFechaIngresoProducto(Date fechaIngresoProducto) {
-        this.fechaIngresoProducto = fechaIngresoProducto;
     }
 
     public Long getProveedorId() {
