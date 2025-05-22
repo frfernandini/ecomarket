@@ -35,10 +35,13 @@ public class InventarioServiceImpl implements InventarioService{
 
     @Override
     public Inventario update(Long id, Inventario inventario){
-        return inventarioRepository.findById(id).map(Inventario ->{
-
-
-        })
+        return inventarioRepository.findById(id).map(In ->{
+            In.setInventarioId(inventario.getInventarioId());
+            In.setCantidadInventario(inventario.getCantidadInventario());
+            return inventarioRepository.save(In);
+        }).orElseThrow(
+                () -> new InventarioException("NO SE ENCUENTRA EN EL INVENTARIO")
+        );
     }
 
 

@@ -43,4 +43,6 @@ public class InventarioController {
     //public ResponseEntity<List<Inventario>>findbyIdInventario(@PathVariable Long id){
         //return ResponseEntity.status(HttpStatus.OK).body(this.inventarioService.findBy(id));
     }
+    //id stock(model) id//sucursal
+ //id producto //fecha ingres producto
 }
