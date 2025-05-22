@@ -2,6 +2,7 @@ package com.jcandia.msvc.ventas.msvc_ventas.models;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
@@ -25,5 +26,6 @@ public class Ventas {
     @NotNull(message = "El campo fecha de venta no puede estar vacio")
     private LocalDateTime fechaHoraVenta;
 
-    @Column(name = "")
+    //@Column(name = "id_sucursal")
+    //@NotBlank
 }
