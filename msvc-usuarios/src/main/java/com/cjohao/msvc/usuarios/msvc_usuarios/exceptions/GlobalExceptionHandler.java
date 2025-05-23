@@ -40,17 +40,16 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorDTO> handleUsuarioException(UsuarioExceptions exception){
 
         if(exception.getMessage().contains("no se encuentra en la base de datos")) {
-            // Esto nos sirve para cuando no existe en la base de datos
             Map<String, String> errorMap = Collections.singletonMap("Usuario no encontrado", exception.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(this.createErrorDTO(HttpStatus.NOT_FOUND.value(), new Date(), errorMap));
 
 
         }else{
-            // Esto nos sirve para cuando el usuario ya existe en nuestra base de datos
             Map<String, String> errorMap = Collections.singletonMap("Usuario existente", exception.getMessage());
             return ResponseEntity.status(HttpStatus.CONFLICT)
                     .body(this.createErrorDTO(HttpStatus.CONFLICT.value(), new Date(), errorMap));
         }
     }
 }
+
