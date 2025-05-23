@@ -42,4 +42,11 @@ public class ProductoController {
                 .status(HttpStatus.CREATED)
                 .body(saved);
     }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        productoService.deleteById(id);
+        return ResponseEntity
+                .status(HttpStatus.NO_CONTENT)
+                .build();
+    }
 }

@@ -1,9 +1,8 @@
 package com.correa.msvc.inventario.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import lombok.*;
 import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.data.annotation.Id;
 
@@ -11,6 +10,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
+@Entity
+@Table(name = "sucursales")
+@Getter @Setter @ToString @NoArgsConstructor @AllArgsConstructor
 public class Sucursal {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,6 +34,9 @@ public class Sucursal {
 
     @Column(name="horario_apertura",nullable = false)
     @NotBlank(message = "El campo no puede quedar Vacio")
-    private LocalDateTime horario;
+    private String horarioApertura;
 
+    @Column(name = "horario_cerrar")
+    @NotBlank(message = "el campo de hora de cerrar no puede estar vacio")
+    private String horarioCerrar;
 }
