@@ -23,22 +23,20 @@ public class Inventario {
     @NotBlank(message = "El Campo de Cantidad no puede estar vacio")
     private String cantidadInventario;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+
     @Column(name = "id_stock")
-    private Long stock_id;
+    private Long stockId;
 
     @Column(name = "producto_fecha_ingreso",nullable = false)
     @NotNull(message = "el campo de fecha de ingreso no puede estar vacio")
-    private Date fecha_ingreso_producto;
+    private Date fechaIngresoProducto;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     @Column(name = "id_producto")
     private Long idProducto;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     @Column(name = "id_sucursal")
     private Long stockSucursal;
 
