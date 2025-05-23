@@ -39,4 +39,6 @@ public class Proveedor {
     @Column(name = "proveedor_fecha_ingreso",nullable = false)
     @NotNull(message = "el campo de fecha de ingreso no puede estar vacio")
     private Date fecha_ingreso;
+
+
 }

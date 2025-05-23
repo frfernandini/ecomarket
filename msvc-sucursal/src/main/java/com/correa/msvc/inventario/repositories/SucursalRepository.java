@@ -7,14 +7,5 @@ import java.util.List;
 import java.util.Optional;
 
 public interface SucursalRepository extends JpaRepository<Sucursal, Long> {
-
-
-    List<Sucursal> findByDireccion(String direccion );
-
-    Optional<Sucursal> findByTelefono(String telefono);
-
-    Optional<Sucursal> findByHorario(String horario);
-
-
-
+    Optional<Sucursal> findByNombre(String nombre);
 }
