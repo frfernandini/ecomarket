@@ -19,25 +19,25 @@ public class Inventario {
     @Column(name = "inventario_id")
     private Long inventarioId;
 
-    @Column(name = "Cantidad_Inventario",nullable = false)
+    @Column(nullable = false)
     @NotBlank(message = "El Campo de Cantidad no puede estar vacio")
     private String cantidadInventario;
 
 
 
-    @Column(name = "id_stock")
+    @Column(nullable = false)
     private Long stockId;
 
-    @Column(name = "producto_fecha_ingreso",nullable = false)
+    @Column(nullable = false)
     @NotNull(message = "el campo de fecha de ingreso no puede estar vacio")
     private Date fechaIngresoProducto;
 
 
-    @Column(name = "id_producto")
+    @Column(nullable = false)
     private Long idProducto;
 
 
-    @Column(name = "id_sucursal")
+    @Column(nullable = false)
     private Long stockSucursal;
 
 }

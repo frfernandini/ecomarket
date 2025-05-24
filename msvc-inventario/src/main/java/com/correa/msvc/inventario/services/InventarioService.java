@@ -9,7 +9,7 @@ public interface InventarioService {
 
     List<Inventario> findAll();
 
-    Optional<Inventario>findById(Long id);
+    Inventario findById(Long id);
 
     Inventario save(Inventario inventario);
     void delete(Long id);
