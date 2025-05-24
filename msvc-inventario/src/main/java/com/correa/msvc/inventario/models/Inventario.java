@@ -19,7 +19,7 @@ public class Inventario {
     @Column(name = "inventario_id")
     private Long inventarioId;
 
-    @Column(name = "Cantidad-Inventario",nullable = false)
+    @Column(name = "Cantidad_Inventario",nullable = false)
     @NotBlank(message = "El Campo de Cantidad no puede estar vacio")
     private String cantidadInventario;
 
