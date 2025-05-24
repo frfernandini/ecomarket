@@ -12,9 +12,6 @@ import java.util.List;
 @FeignClient(name = "msvc-productos",url = "localhost:8083/api/v1/proveedores")
 public interface ProveedorClientRest {
 
-    @GetMapping
-    List<Proveedor> findAll();
-
     @GetMapping("/{id}")
     Proveedor findById(@PathVariable Long id);
 }

@@ -1,6 +1,6 @@
 package com.correa.msvc.inventario.controller;
 
-import com.correa.msvc.inventario.models.Inventario;
+import com.correa.msvc.inventario.models.entities.Inventario;
 import com.correa.msvc.inventario.services.InventarioService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

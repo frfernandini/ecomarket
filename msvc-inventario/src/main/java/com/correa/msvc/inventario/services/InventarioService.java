@@ -1,9 +1,8 @@
 package com.correa.msvc.inventario.services;
 
-import com.correa.msvc.inventario.models.Inventario;
+import com.correa.msvc.inventario.models.entities.Inventario;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface InventarioService {
 
