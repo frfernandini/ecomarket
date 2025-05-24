@@ -44,6 +44,11 @@ public class InventarioServiceImpl implements InventarioService{
     }
 
     @Override
+    public void delete(Long id) {
+
+    }
+
+    @Override
     @Transactional
     public Inventario update(Long id, Inventario inventario){
         return inventarioRepository.findById(id).map(inventarioExistente ->{
