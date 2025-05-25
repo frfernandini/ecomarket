@@ -1,6 +1,7 @@
 package com.cjohao.msvc.usuarios.msvc_usuarios.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -33,6 +34,7 @@ public class Usuarios {
     private String apellidosUsuario;
 
     @Column(name = "correo_usuario",nullable = false,unique = true)
+    @Email(message = "el correo debe tener un formato correcto")
     @NotBlank(message = "El campo correo no puede estar vacio")
     private String correoUsuario;
 
