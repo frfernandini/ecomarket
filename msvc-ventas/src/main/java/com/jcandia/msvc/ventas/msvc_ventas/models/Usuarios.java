@@ -11,5 +11,4 @@ public class Usuarios {
 
     private Long idUsuario;
     private String run;
-
 }
