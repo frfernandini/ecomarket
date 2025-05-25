@@ -18,7 +18,7 @@ public class Sucursal {
     @Column(name="Sucursal_id")
     private Long SucursalId;
 
-    @Column(name="nombre_tienda",nullable = false)
+    @Column(name="nombre_tienda",nullable = false,unique = true)
     @NotBlank(message = "El campo no puede quedar Vacio")
     private String tienda;
 

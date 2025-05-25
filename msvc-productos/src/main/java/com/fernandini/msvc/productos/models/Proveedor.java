@@ -15,5 +15,5 @@ public class Proveedor {
 
     private String correo;
 
-    private Date fecha_ingreso;
+    private Date fechaIngreso;
 }

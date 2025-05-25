@@ -34,5 +34,12 @@ public class InventarioController {
     public ResponseEntity<Inventario>save(@Valid @RequestBody Inventario inventario){
         return ResponseEntity.status(HttpStatus.CREATED).body(inventarioService.save(inventario));
     }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id){
+        inventarioService.delete(id);
+        return ResponseEntity
+                .status(HttpStatus.NO_CONTENT)
+                .build();
+    }
 
 }

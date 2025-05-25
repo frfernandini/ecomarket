@@ -18,7 +18,7 @@ public class Proveedor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "proveedor_id")
-    private Long proveedor_id;
+    private Long proveedoId;
 
     @Column(name = "proveedor_nombre",nullable = false,unique = true)
     @NotBlank(message = "el campo del nombre no puede estar vacio")
@@ -38,7 +38,7 @@ public class Proveedor {
 
     @Column(name = "proveedor_fecha_ingreso",nullable = false)
     @NotNull(message = "el campo de fecha de ingreso no puede estar vacio")
-    private Date fecha_ingreso;
+    private Date fechaIngreso;
 
 
 }

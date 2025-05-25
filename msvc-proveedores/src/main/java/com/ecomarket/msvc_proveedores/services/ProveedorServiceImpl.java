@@ -45,7 +45,7 @@ public class ProveedorServiceImpl implements ProveedorService {
             p.setCorreo(proveedor.getCorreo());
             p.setDireccion(proveedor.getDireccion());
             p.setTelefono(proveedor.getTelefono());
-            p.setFecha_ingreso(proveedor.getFecha_ingreso());
+            p.setFechaIngreso(proveedor.getFechaIngreso());
             return proveedorRepository.save(p);
         }).orElseThrow(
                 () -> new ProveedorException("Proveedor no encontrado")
