@@ -16,6 +16,6 @@ public class VentasProductosDetallesDTO {
     private LocalDateTime fechaHoraVenta;
     private Long idSucursal;
     private Long idUsuario;
-    private Producto producto; // Producto embebido
+    private Producto producto;
     private Integer cantidadProductoVenta;
 }
