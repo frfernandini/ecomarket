@@ -50,6 +50,11 @@ public class ProductoServiceImpl implements ProductoService{
 
     @Override
     public Producto update(Long id,Producto producto) {
+        try {
+            Proveedor proveedor = this.proveedorClientRest.findById(producto.getProveedorId());
+        }catch (FeignException ex) {
+            throw new ProductoException("el proveedor con id: "+producto.getProveedorId()+" no esta registrado");
+        }
         return productoRepository.findById(id).map(p -> {
             p.setNombreProducto(producto.getNombreProducto());
             p.setDescProducto(producto.getDescProducto());
