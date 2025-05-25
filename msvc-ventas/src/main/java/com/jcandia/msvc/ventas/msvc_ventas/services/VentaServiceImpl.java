@@ -74,8 +74,11 @@ public class VentaServiceImpl implements VentaService{
         UsuarioVentasProductosDTO dto = new UsuarioVentasProductosDTO();
         dto.setUsuarios(usuarioClientsRest.findById(idUsuario));
 
-        List<Producto> productos = this.ventaRepository.findByIdUsuario(idUsuario).stream().map(venta ->{
-            return productoClientsRest.fi(venta.getProductos());
+        List<Ventas> ventas = ventaRepository.findByIdUsuario(idUsuario);
+        dto.setVentas(ventas);
+
+        List<Producto> productos = ventas.stream().map(venta -> {
+            return productoClientsRest.findById(venta.getIdProducto());
         }).toList();
         dto.setProductos(productos);
         return dto;
