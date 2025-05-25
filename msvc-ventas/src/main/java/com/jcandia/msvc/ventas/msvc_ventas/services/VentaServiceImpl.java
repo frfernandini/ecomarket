@@ -4,6 +4,7 @@ import com.jcandia.msvc.ventas.msvc_ventas.clients.ProductoClientsRest;
 import com.jcandia.msvc.ventas.msvc_ventas.clients.SucursalClientsRest;
 import com.jcandia.msvc.ventas.msvc_ventas.clients.UsuarioClientsRest;
 import com.jcandia.msvc.ventas.msvc_ventas.dto.UsuarioVentasProductosDTO;
+import com.jcandia.msvc.ventas.msvc_ventas.dto.VentasProductosDetallesDTO;
 import com.jcandia.msvc.ventas.msvc_ventas.exceptions.VentaExceptions;
 import com.jcandia.msvc.ventas.msvc_ventas.models.Producto;
 import com.jcandia.msvc.ventas.msvc_ventas.models.Sucursal;
@@ -75,12 +76,22 @@ public class VentaServiceImpl implements VentaService{
         dto.setUsuarios(usuarioClientsRest.findById(idUsuario));
 
         List<Ventas> ventas = ventaRepository.findByIdUsuario(idUsuario);
-        dto.setVentas(ventas);
 
-        List<Producto> productos = ventas.stream().map(venta -> {
-            return productoClientsRest.findById(venta.getIdProducto());
+        List<VentasProductosDetallesDTO> ventasConProductos = ventas.stream().map(venta -> {
+            Producto producto = productoClientsRest.findById(venta.getIdProducto());
+            VentasProductosDetallesDTO ventaDTO = new VentasProductosDetallesDTO();
+
+            ventaDTO.setIdVenta(venta.getIdVenta());
+            ventaDTO.setFechaHoraVenta(venta.getFechaHoraVenta());
+            ventaDTO.setIdSucursal(venta.getIdSucursal());
+            ventaDTO.setIdUsuario(venta.getIdUsuario());
+            ventaDTO.setProducto(producto);
+            ventaDTO.setCantidadProductoVenta(venta.getCantidadProductoVenta());
+
+            return ventaDTO;
         }).toList();
-        dto.setProductos(productos);
+
+        dto.setVentas(ventasConProductos);
         return dto;
     }
 

@@ -15,7 +15,6 @@ import java.util.List;
 public class UsuarioVentasProductosDTO {
 
     private Usuarios usuarios;
-    private List<Ventas> ventas;
-    private List<Producto> productos;
+    private List<VentasProductosDetallesDTO> ventas;
 
 }
