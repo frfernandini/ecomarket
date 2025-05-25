@@ -55,5 +55,23 @@ public class InventarioServicelmpl implements InventarioService{
 
     }
 
+    @Override
+    @Transactional
+    public Inventario descontarCantidad(Long idProducto, Integer cantidadVentas) {
+        if (cantidadVentas == null || cantidadVentas <= 0) {
+            throw new InventarioException("La cantidad a descontar debe ser mayor que cero");
+        }
+
+        Inventario inventario = inventarioRepository.findByIdProducto(idProducto)
+                .orElseThrow(() -> new InventarioException("No hay inventario para producto: "+idProducto));
+
+        if (inventario.getCantidadInventario() < cantidadVentas) {
+            throw new InventarioException("La Stock es insuficiente para producto: "+idProducto);
+        }else{
+            inventario.setCantidadInventario(inventario.getCantidadInventario() - cantidadVentas);
+        }
+        return inventarioRepository.save(inventario);
+    }
+
 
 }

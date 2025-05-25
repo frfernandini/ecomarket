@@ -13,5 +13,7 @@ public interface InventarioService {
     Inventario save(Inventario inventario);
     void delete(Long id);
 
+    Inventario descontarCantidad(Long idProducto, Integer cantidadVentas);
+
 
 }

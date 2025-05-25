@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -21,11 +22,11 @@ public class Inventario {
 
     @Column(name = "cantidad_inventario",nullable = false)
     @NotNull(message = "El Campo de Cantidad no puede estar vacio")
-    private Long cantidadInventario;
+    private Integer cantidadInventario;
 
     @Column(name="fecha_ingreso_producto",nullable = false)
     @NotNull(message = "el campo de fecha de ingreso no puede estar vacio")
-    private Date fechaIngresoProducto;
+    private LocalDate fechaIngresoProducto;
 
 
     @Column(name = "id_producto",nullable = false)

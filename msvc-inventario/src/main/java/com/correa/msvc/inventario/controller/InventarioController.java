@@ -42,4 +42,11 @@ public class InventarioController {
                 .build();
     }
 
+    @PutMapping("/descontar-stock/{idProducto}")
+    public ResponseEntity<Inventario> descontarStock(@PathVariable Long idProducto, @Valid @RequestBody Integer cantidadVentas) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(inventarioService.descontarCantidad(idProducto, cantidadVentas));
+    }
+
 }

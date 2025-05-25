@@ -1,11 +1,13 @@
 package com.jcandia.msvc.ventas.msvc_ventas.services;
 
+import com.jcandia.msvc.ventas.msvc_ventas.clients.InventarioClientsRest;
 import com.jcandia.msvc.ventas.msvc_ventas.clients.ProductoClientsRest;
 import com.jcandia.msvc.ventas.msvc_ventas.clients.SucursalClientsRest;
 import com.jcandia.msvc.ventas.msvc_ventas.clients.UsuarioClientsRest;
 import com.jcandia.msvc.ventas.msvc_ventas.dto.UsuarioVentasProductosDTO;
 import com.jcandia.msvc.ventas.msvc_ventas.dto.VentasProductosDetallesDTO;
 import com.jcandia.msvc.ventas.msvc_ventas.exceptions.VentaExceptions;
+import com.jcandia.msvc.ventas.msvc_ventas.models.Inventario;
 import com.jcandia.msvc.ventas.msvc_ventas.models.Producto;
 import com.jcandia.msvc.ventas.msvc_ventas.models.Sucursal;
 import com.jcandia.msvc.ventas.msvc_ventas.models.Usuarios;
@@ -29,6 +31,8 @@ public class VentaServiceImpl implements VentaService{
     private SucursalClientsRest sucursalClientsRest;
     @Autowired
     private UsuarioClientsRest usuarioClientsRest;
+    @Autowired
+    private InventarioClientsRest inventarioClientsRest;
 
 
 
@@ -67,7 +71,18 @@ public class VentaServiceImpl implements VentaService{
             throw new VentaExceptions("El PRODUCTO con id "+ventas.getIdProducto()+" no existe,"+
                     "por ende no es posible generar el nexo de relacion");
         }
+
+        Inventario inv = new Inventario();
+        inv.setIdProducto(ventas.getIdProducto());
+        inv.setCantidadInventario(ventas.getCantidadProductoVenta());
+
+        try {
+            inventarioClientsRest.descontarStock(ventas.getIdProducto(),ventas.getCantidadProductoVenta());
+        } catch (FeignException e) {
+            throw new VentaExceptions("No fue posible descontar stock: "+e.getMessage());
+        }
         return ventaRepository.save(ventas);
+
     }
 
     @Override
