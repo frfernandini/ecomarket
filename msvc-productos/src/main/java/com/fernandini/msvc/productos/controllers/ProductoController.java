@@ -42,6 +42,13 @@ public class ProductoController {
                 .status(HttpStatus.CREATED)
                 .body(saved);
     }
+    @PutMapping("/{id}")
+    public ResponseEntity<Producto> update(@PathVariable Long id, @Valid @RequestBody Producto producto) {
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(this.productoService.update(id, producto));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         productoService.deleteById(id);
