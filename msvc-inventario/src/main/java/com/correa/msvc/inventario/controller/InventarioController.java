@@ -1,16 +1,19 @@
 package com.correa.msvc.inventario.controller;
 
-import com.correa.msvc.inventario.models.Inventario;
+import com.correa.msvc.inventario.models.entities.Inventario;
 import com.correa.msvc.inventario.services.InventarioService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RestController
+@RequestMapping("/api/v1/inventarios")
+@Validated
 public class InventarioController {
     @Autowired
     private InventarioService inventarioService;
@@ -28,6 +31,15 @@ public class InventarioController {
                 .body(inventarioService.findById(id));
     }
     @PostMapping
-    public ResponseEntity<Inventario>
+    public ResponseEntity<Inventario>save(@Valid @RequestBody Inventario inventario){
+        return ResponseEntity.status(HttpStatus.CREATED).body(inventarioService.save(inventario));
+    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id){
+        inventarioService.delete(id);
+        return ResponseEntity
+                .status(HttpStatus.NO_CONTENT)
+                .build();
+    }
 
 }

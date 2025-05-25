@@ -16,9 +16,9 @@ public class Sucursal {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="Sucursal_id")
-    private Long Sucursal_id;
+    private Long SucursalId;
 
-    @Column(name="nombre_tienda",nullable = false)
+    @Column(name="nombre_tienda",nullable = false,unique = true)
     @NotBlank(message = "El campo no puede quedar Vacio")
     private String tienda;
 

@@ -1,4 +1,4 @@
-package com.correa.msvc.inventario.models;
+package com.correa.msvc.inventario.models.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -19,25 +19,21 @@ public class Inventario {
     @Column(name = "inventario_id")
     private Long inventarioId;
 
-    @Column(name = "Cantidad_Inventario",nullable = false)
-    @NotBlank(message = "El Campo de Cantidad no puede estar vacio")
-    private String cantidadInventario;
+    @Column(name = "cantidad_inventario",nullable = false)
+    @NotNull(message = "El Campo de Cantidad no puede estar vacio")
+    private Long cantidadInventario;
 
-
-
-    @Column(name = "id_stock")
-    private Long stockId;
-
-    @Column(name = "producto_fecha_ingreso",nullable = false)
+    @Column(name="fecha_ingreso_producto",nullable = false)
     @NotNull(message = "el campo de fecha de ingreso no puede estar vacio")
     private Date fechaIngresoProducto;
 
 
-    @Column(name = "id_producto")
+    @Column(name = "id_producto",nullable = false)
+    @NotNull(message = "id de producto no puede estar vacio")
     private Long idProducto;
 
-
-    @Column(name = "id_sucursal")
-    private Long stockSucursal;
+    @Column(name ="id_sucursal",nullable = false)
+    @NotNull(message = "id surcursal no puede estar vacio")
+    private Long idSucursal;
 
 }

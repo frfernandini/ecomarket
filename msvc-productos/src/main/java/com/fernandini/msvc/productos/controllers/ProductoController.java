@@ -1,4 +1,4 @@
-package com.fernandini.msvc.productos.controller;
+package com.fernandini.msvc.productos.controllers;
 
 import com.fernandini.msvc.productos.models.Producto;
 import com.fernandini.msvc.productos.services.ProductoService;
