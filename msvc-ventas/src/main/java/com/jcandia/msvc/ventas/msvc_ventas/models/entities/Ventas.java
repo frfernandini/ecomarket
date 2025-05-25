@@ -25,11 +25,23 @@ public class Ventas {
     @NotNull(message = "El campo fecha de venta no puede estar vacio")
     private LocalDateTime fechaHoraVenta;
 
-    @Column(name = "id_sucursal")
+    @Column(name = "id_sucursal",nullable = false)
     @NotNull(message = "El campo de id sucursal no puede estar vacio")
     private Long idSucursal;
 
-    @Column(name = "id_usuario")
+    @Column(name = "id_usuario",nullable = false)
     @NotNull(message = "El campo de id usuario no puede estar vacio")
     private Long idUsuario;
+
+    @Column(name = "id_producto",nullable = false)
+    @NotNull(message = "El campo de id producto no puede estar vacio")
+    private Long idProducto;
+
+    @Column(name = "cantidad_producto",nullable = false)
+    @NotNull(message = "El campo de cantidad de producto no puede estar vacio")
+    private Integer cantidadProductoVenta;
+
+    //@Column(name = "precio_producto",nullable = false)
+    //@NotNull(message = "El campo precio del producto no puede estar vacio")
+    //private Double precioUnitario;
 }
