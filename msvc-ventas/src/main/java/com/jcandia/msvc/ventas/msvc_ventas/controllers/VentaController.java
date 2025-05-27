@@ -47,25 +47,4 @@ public class VentaController {
                 .body(ventaService.findByIdUsuario(id));
     }
 
-
-
-
-
-
-
-
-    //@PutMapping("/{id}")
-    //public ResponseEntity<Ventas> update(@PathVariable Long id,@Valid @RequestBody Ventas venta) {
-        //return ResponseEntity
-                //.status(HttpStatus.CREATED)
-                //.body(ventaService.update(id, venta));
-    //}
-
-    //@DeleteMapping("/{id}")
-    //public ResponseEntity<Void> deleteById(@PathVariable Long id) {
-        //ventaService.deleteById(id);
-        //return ResponseEntity
-                //.status(HttpStatus.NO_CONTENT)
-                //.build();
-    //}
 }

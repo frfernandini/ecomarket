@@ -34,8 +34,6 @@ public class VentaServiceImpl implements VentaService{
     private InventarioClientsRest inventarioClientsRest;
 
 
-
-
     @Override
     public List<Ventas> findAll() {return ventaRepository.findAll();
     }
@@ -58,14 +56,12 @@ public class VentaServiceImpl implements VentaService{
         }
         try{
             Usuarios usuarios = this.usuarioClientsRest.findById(ventas.getIdUsuario());
-
         } catch (FeignException exception) {
             throw new VentaExceptions("El USUARIO con id "+ventas.getIdUsuario()+" no existe,"+
                     "por ende no es posible generar el nexo de relacion");
         }
         try{
             Producto producto = this.productoClientsRest.findById(ventas.getIdProducto());
-
         } catch (FeignException exception) {
             throw new VentaExceptions("El PRODUCTO con id "+ventas.getIdProducto()+" no existe,"+
                     "por ende no es posible generar el nexo de relacion");
@@ -75,8 +71,8 @@ public class VentaServiceImpl implements VentaService{
         } catch (FeignException e) {
             throw new VentaExceptions("No fue posible descontar stock: "+e.getMessage());
         }
-        return ventaRepository.save(ventas);
 
+        return ventaRepository.save(ventas);
     }
 
     @Override
@@ -106,6 +102,3 @@ public class VentaServiceImpl implements VentaService{
 
 }
 
-//if(ventaRepository.findById(ventas.getIdVenta()).isPresent()){
-        //throw new VentaExceptions("La venta con este ID ya esta registrado");
-        //}

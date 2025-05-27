@@ -35,21 +35,5 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(this.createErrorDTO(HttpStatus.BAD_REQUEST.value(), new Date(),errorMap));
     }
-
-    @ExceptionHandler(UsuarioExceptions.class)
-    public ResponseEntity<ErrorDTO> handleUsuarioException(UsuarioExceptions exception){
-
-        if(exception.getMessage().contains("no se encuentra en la base de datos")) {
-            Map<String, String> errorMap = Collections.singletonMap("Usuario no encontrado", exception.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(this.createErrorDTO(HttpStatus.NOT_FOUND.value(), new Date(), errorMap));
-
-
-        }else{
-            Map<String, String> errorMap = Collections.singletonMap("Usuario existente", exception.getMessage());
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(this.createErrorDTO(HttpStatus.CONFLICT.value(), new Date(), errorMap));
-        }
-    }
 }
 
