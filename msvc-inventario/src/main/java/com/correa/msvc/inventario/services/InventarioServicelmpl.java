@@ -56,6 +56,26 @@ public class InventarioServicelmpl implements InventarioService{
     }
 
     @Override
+    public Inventario update(Long id, Inventario inventario) {
+        try {
+            Producto producto = this.productoClientRest.findById(inventario.getIdProducto());
+            Sucursal sucursal = this.sucursalClientRest.findById(inventario.getIdSucursal());
+        }catch (FeignException ex) {
+            throw new InventarioException("producto o surcursal no encontrado");
+        }
+        return inventarioRepository.findById(id).map(i -> {
+            i.setCantidadInventario(inventario.getCantidadInventario());
+            i.setIdProducto(inventario.getIdProducto());
+            i.setIdSucursal(inventario.getIdSucursal());
+            i.setFechaIngresoProducto(inventario.getFechaIngresoProducto());
+            return inventarioRepository.save(i);
+        } ).orElseThrow(
+                () -> new InventarioException("inventario con id"+id+"no encontrado")
+        );
+    }
+
+
+    @Override
     @Transactional
     public Inventario descontarCantidad(Long idProducto, Integer cantidadVentas) {
         if (cantidadVentas == null || cantidadVentas <= 0) {

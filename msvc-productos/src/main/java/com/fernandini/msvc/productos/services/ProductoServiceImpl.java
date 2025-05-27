@@ -29,7 +29,7 @@ public class ProductoServiceImpl implements ProductoService{
     public Producto findById(Long id) {
 
         return this.productoRepository.findById(id).orElseThrow(
-                () -> new ProductoException("el paciente con id: "+id+" no esta registrado")
+                () -> new ProductoException("el producto con id: "+id+" no esta registrado")
         );
     }
 
@@ -42,7 +42,6 @@ public class ProductoServiceImpl implements ProductoService{
             throw new ProductoException(ex.getMessage());
         }
     }
-
     @Override
     public void deleteById(Long id) {
         productoRepository.deleteById(id);
@@ -62,7 +61,7 @@ public class ProductoServiceImpl implements ProductoService{
             p.setPrecioProducto(producto.getPrecioProducto());
             return productoRepository.save(p);
         } ).orElseThrow(
-                () -> new ProductoException("Paciente con id"+id+"no encontrado")
+                () -> new ProductoException("Producto con id"+id+"no encontrado")
         );
     }
 }
