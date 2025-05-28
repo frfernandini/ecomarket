@@ -42,7 +42,7 @@ public class Usuarios {
     @NotBlank(message = "El campo contraseña no puede estar vacio")
     private String contraseña;
 
-    @Column(name = "registro_usuario",nullable = false,unique = true)
+    @Column(name = "registro_usuario",nullable = false)
     @NotNull(message = "La fecha de registro no puede ser nula")
     private LocalDate registroUsuario;
 }

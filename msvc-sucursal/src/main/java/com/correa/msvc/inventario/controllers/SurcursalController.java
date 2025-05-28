@@ -43,7 +43,7 @@ public class SurcursalController {
                 .status(HttpStatus.CREATED)
                 .body(sucursalService.update(sucursal, id));
     }
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         sucursalService.deleteById(id);
         return ResponseEntity
