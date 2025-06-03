@@ -100,5 +100,8 @@ public class VentaServiceImpl implements VentaService{
         return dto;
     }
 
+    @Override
+    public void deleteById(Long id) {ventaRepository.deleteById(id);}
+
 }
 

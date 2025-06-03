@@ -10,4 +10,5 @@ public interface VentaService {
     Ventas findById(Long id);
     Ventas save(Ventas ventas);
     UsuarioVentasProductosDTO findByIdUsuario(Long idUsuario);
+    void deleteById(Long id);
 }
