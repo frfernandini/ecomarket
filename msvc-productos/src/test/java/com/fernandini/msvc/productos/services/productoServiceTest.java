@@ -5,6 +5,7 @@ import com.fernandini.msvc.productos.clients.ProveedorClientRest;
 import com.fernandini.msvc.productos.exceptions.ProductoException;
 import com.fernandini.msvc.productos.models.Producto;
 import com.fernandini.msvc.productos.repositories.ProductoRepository;
+import net.datafaker.Faker;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -16,10 +17,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 
@@ -42,7 +44,18 @@ public class productoServiceTest {
 
     @BeforeEach
     public void setUp(){
-        //implementar faker
+        Faker faker = new Faker(Locale.of("es","CL"));
+        for (int i=0;i<100;i++){
+            Producto producto = new Producto();
+            producto.setProductoId((long)i+1);
+            producto.setNombreProducto(faker.commerce().productName());
+            producto.setPrecioProducto(Double.valueOf(faker.commerce().price()));
+            producto.setDescProducto(faker.commerce().material());
+            producto.setProveedorId(faker.number().numberBetween(1L,100L));
+            producto.setCategoriaProducto(faker.commerce().department());
+            this.productoList.add(producto);
+        }
+        this.productoPrueba = this.productoList.get(0);
     }
 
 
@@ -51,10 +64,10 @@ public class productoServiceTest {
     public void shouldFindAll(){
         when(productoRepository.findAll()).thenReturn(this.productoList);
         List<Producto> result = productoService.findAll();
-        assertThat(result).hasSize(100);
+        assertThat(result).hasSize(200);
         assertThat(result).contains(this.productoPrueba);
 
-        verify(productoRepository,times(1)
+        verify(productoRepository,times(1)).findAll();
     }
 
     @Test
