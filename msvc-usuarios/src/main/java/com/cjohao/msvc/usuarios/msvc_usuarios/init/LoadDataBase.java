@@ -34,7 +34,9 @@ public class LoadDataBase implements CommandLineRunner {
                 usuarios.setApellidosUsuario(faker.name().lastName());
                 usuarios.setCorreoUsuario(faker.internet().emailAddress());
                 usuarios.setContraseña(faker.internet().password());
-                usuarios.setRegistroUsuario(LocalDate.now());
+
+                LocalDate fechaRegistro = faker.timeAndDate().birthday();
+                usuarios.setRegistroUsuario(fechaRegistro);
 
                 String numeroString = faker.idNumber().valid().replaceAll("-","");
                 String ultimo = numeroString.substring(numeroString.length()-1);
