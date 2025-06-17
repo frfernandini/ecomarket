@@ -4,8 +4,7 @@ import com.jcandia.msvc.ventas.msvc_ventas.clients.InventarioClientsRest;
 import com.jcandia.msvc.ventas.msvc_ventas.clients.ProductoClientsRest;
 import com.jcandia.msvc.ventas.msvc_ventas.clients.SucursalClientsRest;
 import com.jcandia.msvc.ventas.msvc_ventas.clients.UsuarioClientsRest;
-import com.jcandia.msvc.ventas.msvc_ventas.dto.UsuarioVentasProductosDTO;
-import com.jcandia.msvc.ventas.msvc_ventas.dto.VentasProductosDetallesDTO;
+import com.jcandia.msvc.ventas.msvc_ventas.dto.*;
 import com.jcandia.msvc.ventas.msvc_ventas.exceptions.VentaExceptions;
 import com.jcandia.msvc.ventas.msvc_ventas.models.Producto;
 import com.jcandia.msvc.ventas.msvc_ventas.models.Sucursal;
@@ -35,8 +34,7 @@ public class VentaServiceImpl implements VentaService{
 
 
     @Override
-    public List<Ventas> findAll() {return ventaRepository.findAll();
-    }
+    public List<Ventas> findAll() {return ventaRepository.findAll();}
 
     @Override
     public Ventas findById(Long id) {
@@ -76,8 +74,8 @@ public class VentaServiceImpl implements VentaService{
     }
 
     @Override
-    public UsuarioVentasProductosDTO findByIdUsuario(Long idUsuario) {
-        UsuarioVentasProductosDTO dto = new UsuarioVentasProductosDTO();
+    public ListaVentasUsuarioDTO findByIdUsuario(Long idUsuario) {
+        ListaVentasUsuarioDTO dto = new ListaVentasUsuarioDTO();
         dto.setUsuarios(usuarioClientsRest.findById(idUsuario));
 
         List<Ventas> ventas = ventaRepository.findByIdUsuario(idUsuario);
@@ -102,6 +100,20 @@ public class VentaServiceImpl implements VentaService{
 
     @Override
     public void deleteById(Long id) {ventaRepository.deleteById(id);}
+
+    @Override
+    public Ventas update(Long id, Ventas ventas) {
+        return ventaRepository.findById(id).map(v->{
+            v.setFechaHoraVenta(ventas.getFechaHoraVenta());
+            v.setIdSucursal(ventas.getIdSucursal());
+            v.setIdUsuario(ventas.getIdUsuario());
+            v.setIdProducto(ventas.getIdProducto());
+            v.setCantidadProductoVenta(ventas.getCantidadProductoVenta());
+            return ventaRepository.save(v);
+        }).orElseThrow(
+                () -> new VentaExceptions("La venta con id "+id+" no existe")
+        );
+    }
 
 }
 

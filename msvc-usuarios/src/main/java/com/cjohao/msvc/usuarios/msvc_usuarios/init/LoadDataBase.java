@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.util.Locale;
 
-@Profile("dev")
+@Profile("test")
 @Component
 public class LoadDataBase implements CommandLineRunner {
 

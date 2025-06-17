@@ -1,8 +1,9 @@
 package com.jcandia.msvc.ventas.msvc_ventas.controllers;
 
-import com.jcandia.msvc.ventas.msvc_ventas.dto.UsuarioVentasProductosDTO;
+import com.jcandia.msvc.ventas.msvc_ventas.dto.ListaVentasUsuarioDTO;
 import com.jcandia.msvc.ventas.msvc_ventas.models.entities.Ventas;
 import com.jcandia.msvc.ventas.msvc_ventas.services.VentaService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,7 +42,7 @@ public class VentaController {
     }
 
     @GetMapping("/usuario/{id}")
-    public ResponseEntity<UsuarioVentasProductosDTO> findByIdUsuario(@PathVariable Long id) {
+    public ResponseEntity<ListaVentasUsuarioDTO> findByIdUsuario(@PathVariable Long id) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(ventaService.findByIdUsuario(id));
@@ -53,5 +54,12 @@ public class VentaController {
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Ventas> update(@PathVariable Long id, @Valid @RequestBody Ventas ventas) {
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(ventaService.update(id,ventas));
     }
 }

@@ -1,8 +1,6 @@
 package com.jcandia.msvc.ventas.msvc_ventas.dto;
 
-import com.jcandia.msvc.ventas.msvc_ventas.models.Producto;
 import com.jcandia.msvc.ventas.msvc_ventas.models.Usuarios;
-import com.jcandia.msvc.ventas.msvc_ventas.models.entities.Ventas;
 import lombok.*;
 
 import java.util.List;
@@ -12,7 +10,7 @@ import java.util.List;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class UsuarioVentasProductosDTO {
+public class ListaVentasUsuarioDTO {
 
     private Usuarios usuarios;
     private List<VentasProductosDetallesDTO> ventas;
