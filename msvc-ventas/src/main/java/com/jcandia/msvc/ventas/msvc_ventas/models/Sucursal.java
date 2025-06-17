@@ -9,6 +9,10 @@ import lombok.*;
 @NoArgsConstructor
 public class Sucursal {
 
-    private Long Sucursal_id;
+    private Long SucursalId;
     private String tienda;
+    private String direccion;
+    private String telefono;
+    private String horarioApertura;
+    private String horarioCerrar;
 }
