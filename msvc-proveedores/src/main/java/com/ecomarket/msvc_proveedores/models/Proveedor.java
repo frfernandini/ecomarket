@@ -7,6 +7,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -38,7 +40,7 @@ public class Proveedor {
 
     @Column(name = "proveedor_fecha_ingreso",nullable = false)
     @NotNull(message = "el campo de fecha de ingreso no puede estar vacio")
-    private Date fechaIngreso;
+    private LocalDate fechaIngreso;
 
 
 }
