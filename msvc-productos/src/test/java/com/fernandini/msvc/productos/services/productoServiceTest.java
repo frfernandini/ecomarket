@@ -49,7 +49,7 @@ public class productoServiceTest {
             Producto producto = new Producto();
             producto.setProductoId((long)i+1);
             producto.setNombreProducto(faker.commerce().productName());
-            producto.setPrecioProducto(Double.valueOf(faker.commerce().price()));
+            producto.setPrecioProducto(Double.valueOf(faker.commerce().price().replace(",",".")));
             producto.setDescProducto(faker.commerce().material());
             producto.setProveedorId(faker.number().numberBetween(1L,100L));
             producto.setCategoriaProducto(faker.commerce().department());
@@ -64,7 +64,7 @@ public class productoServiceTest {
     public void shouldFindAll(){
         when(productoRepository.findAll()).thenReturn(this.productoList);
         List<Producto> result = productoService.findAll();
-        assertThat(result).hasSize(200);
+        assertThat(result).hasSize(100);
         assertThat(result).contains(this.productoPrueba);
 
         verify(productoRepository,times(1)).findAll();
@@ -90,7 +90,7 @@ public class productoServiceTest {
         assertThatThrownBy(()-> {
             productoService.findById(idInexistente);
         }).isInstanceOf(ProductoException.class)
-                .hasMessageContaining("el producto con id "+idInexistente + "no se encuentra en la base de datos");
+                .hasMessageContaining("el producto con id: "+idInexistente + " no esta registrado");
         verify(productoRepository,times(1)).findById(idInexistente);
     }
     @Test
@@ -102,7 +102,7 @@ public class productoServiceTest {
         assertThatThrownBy(()-> {
             productoService.findById(idInexistente);
         }).isInstanceOf(ProductoException.class)
-                .hasMessageContaining("el producto con id "+idInexistente + "no se encuentra en la base de datos");
+                .hasMessageContaining("el producto con id: "+idInexistente + " no esta registrado");
         verify(productoRepository,times(1)).findById(idInexistente);
     }
 

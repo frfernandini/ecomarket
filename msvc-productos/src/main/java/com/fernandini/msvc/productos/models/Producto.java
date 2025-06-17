@@ -23,7 +23,7 @@ public class Producto {
     @Column(name = "producto_id")
     private Long productoId;
 
-    @Column(name = "nombre_producto",nullable = false,unique = true)
+    @Column(name = "nombre_producto",nullable = false)
     @NotBlank(message = "el campo de nombre no puede estar vacio")
     private String nombreProducto;
 
