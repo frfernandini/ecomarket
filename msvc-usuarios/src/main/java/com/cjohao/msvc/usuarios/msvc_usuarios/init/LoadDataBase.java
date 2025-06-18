@@ -11,9 +11,11 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
 
-@Profile("test")
+@Profile("dev")
 @Component
 public class LoadDataBase implements CommandLineRunner {
 
@@ -26,13 +28,21 @@ public class LoadDataBase implements CommandLineRunner {
     public void run(String... args) throws Exception {
         Faker faker = new Faker(Locale.of("es","CL"));
 
+        Set<String> correoUsados = new HashSet<>();
         if(usuarioRepository.count()==0){
             for(int i=0;i<1000;i++){
+
+                String correo;
+                do{
+                    correo = faker.internet().emailAddress();
+                } while(correoUsados.contains(correo));
+
+                correoUsados.add(correo);
                 Usuarios usuarios = new Usuarios();
 
                 usuarios.setNombresUsuario(faker.name().firstName());
                 usuarios.setApellidosUsuario(faker.name().lastName());
-                usuarios.setCorreoUsuario(faker.internet().emailAddress());
+                usuarios.setCorreoUsuario(correo);
                 usuarios.setContraseña(faker.internet().password());
 
                 LocalDate fechaRegistro = faker.timeAndDate().birthday();
@@ -49,7 +59,5 @@ public class LoadDataBase implements CommandLineRunner {
 
             }
         }
-
-
     }
 }
