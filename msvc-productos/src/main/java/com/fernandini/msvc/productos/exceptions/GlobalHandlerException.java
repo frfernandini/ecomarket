@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.lang.reflect.Field;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,5 +35,17 @@ public class GlobalHandlerException {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(this.createErrorDTO(HttpStatus.BAD_REQUEST.value(),new Date(),errorMap));
+    }
+    @ExceptionHandler(ProductoException.class)
+    public ResponseEntity<ErrorDTO> handleProductoException(ProductoException exception){
+        if(exception.getMessage().contains("no esta registrado")){
+            Map<String,String> errorMap = Collections.singletonMap("Producto no encontrado",exception.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(this.createErrorDTO(HttpStatus.NOT_FOUND.value(),new Date(),errorMap));
+        }else{
+            Map<String,String> errorMap = Collections.singletonMap("Producto encontrado",exception.getMessage());
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(this.createErrorDTO(HttpStatus.CONFLICT.value(),new Date(),errorMap));
+        }
     }
 }

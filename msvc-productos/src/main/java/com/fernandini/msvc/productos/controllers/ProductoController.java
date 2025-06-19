@@ -1,5 +1,6 @@
 package com.fernandini.msvc.productos.controllers;
 
+import com.fernandini.msvc.productos.dtos.ErrorDTO;
 import com.fernandini.msvc.productos.exceptions.GlobalHandlerException;
 import com.fernandini.msvc.productos.exceptions.ProductoException;
 import com.fernandini.msvc.productos.models.Producto;
@@ -14,6 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.bouncycastle.jcajce.spec.RawEncodedKeySpec;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -22,6 +24,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.print.DocFlavor;
+import javax.print.ServiceUI;
 import java.util.List;
 
 @RestController
@@ -39,7 +42,7 @@ public class ProductoController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
-            description = "obtencion de todos los productos registrados")
+            description = "obtencion de todos los productos registrados exitosa")
     })
     public ResponseEntity<List<Producto>> findAll(){
         List<Producto> productos = this.productoService.findAll();
@@ -53,21 +56,21 @@ public class ProductoController {
 
 
     @GetMapping("/{id}")
-    @Operation(summary = "Endpoint que obtiene un producor por id",
-    description = "Endpoint que va a devolver un producto.class ak momento de buscarlo por id")
+    @Operation(summary = "Endpoint que obtiene un producto por id",
+    description = "Endpoint que va a devolver un producto.class al momento de buscarlo por id")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
             description = "obtencion por id correcta"),
             @ApiResponse(
                     responseCode = "404",
-                    description = "Error cuando el producto con cierto id no existe",
+                    description = "Error el producto con  id ingresada no existe",
                     content = @Content(
-                            mediaType = "aplication/json",
-                            // schema = @Schema(implementation = ProductoException.class)
-                            examples = @ExampleObject(
-                                    name = "ERROR NOT FOUND",
-                                    value = "{\"status\":\"200\",\"error\":\"producto no encontrado\"}"
-                            )
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ProductoException.class)
+                            //examples = @ExampleObject(
+                            //        name = "ERROR NOT FOUND",
+                            //        value = "{\"status\":\"200\",\"error\":\"producto no encontrado\"}"
+                            //)
                     )
             )
     })
@@ -93,13 +96,13 @@ public class ProductoController {
     @PostMapping
     @Operation(
             summary = "Endpoint guardado de un producto",
-            description = "Endpoint que se permite acpturar un elemento Producto.class y lo guarda dentro de nuestra base de datos"
+            description = "Endpoint que se permite guardar un elemento Producto.class dentro de nuestra base de datos"
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "creacion exitosa"),
-            @ApiResponse(responseCode = "404",description = "algun elemtno de un msvc no se encuentra",
+            @ApiResponse(responseCode = "404",description = "algun elemento de un msvc no se encuentra",
             content = @Content(
-                    mediaType = "aplication/json",
+                    mediaType = "application/json",
                     schema = @Schema(implementation = GlobalHandlerException.class)
             )),
             @ApiResponse(responseCode = "409",description = "el elemento que intentas crear ya existe")
@@ -121,7 +124,26 @@ public class ProductoController {
                 .status(HttpStatus.CREATED)
                 .body(saved);
     }
+
+
+
+
     @PutMapping("/{id}")
+    @Operation(
+            summary = "Endpoint modificacion de un producto",
+            description = "Endpoint que me permite modificar la informacion de un elemento producto.class anteriormente registrado en la base de datos"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201",description = "producto modificado"),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "algun elemento no se encuentra",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorDTO.class)
+                    )
+            )
+    })
     public ResponseEntity<Producto> update(@PathVariable Long id, @Valid @RequestBody Producto producto) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -129,6 +151,13 @@ public class ProductoController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(
+            summary = "Endpoint borrar un producto",
+            description = "Endpoint que me permite eliminar un elemento producto.class anteriormente guardado"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204",description = "producto eliminado")
+    })
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         productoService.deleteById(id);
         return ResponseEntity
