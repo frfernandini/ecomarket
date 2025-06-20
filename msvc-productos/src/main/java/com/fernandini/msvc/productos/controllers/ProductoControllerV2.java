@@ -1,5 +1,6 @@
 package com.fernandini.msvc.productos.controllers;
 
+import com.fernandini.msvc.productos.assemblers.ProductoModelAssembler;
 import com.fernandini.msvc.productos.dtos.ErrorDTO;
 import com.fernandini.msvc.productos.exceptions.GlobalHandlerException;
 import com.fernandini.msvc.productos.exceptions.ProductoException;
@@ -9,64 +10,86 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.bouncycastle.jcajce.spec.RawEncodedKeySpec;
+import org.hibernate.grammars.hql.HqlParser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.print.DocFlavor;
-import javax.print.ServiceUI;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 @RestController
-@RequestMapping("api/v1/productos")
+@RequestMapping("api/v2/productos")
 @Validated
 @Tag(name = "producto API",description = "aqui se generan todos los metodos CRUD para producto")
-public class ProductoController {
+public class ProductoControllerV2 {
 
     @Autowired
     private ProductoService productoService;
 
-    @GetMapping
+    @Autowired
+    private ProductoModelAssembler productoModelAssembler;
+
+    @GetMapping(produces = MediaTypes.HAL_JSON_VALUE)
     @Operation(summary = "Endpoint que obtiene todos los productos",
     description = "este endpoint devuelve en un list todos los productos que se encuentren en la base de datos"
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
-            description = "obtencion de todos los productos registrados exitosa")
+            description = "obtencion de todos los productos registrados exitosa",
+            content = @Content(
+                    mediaType = MediaTypes.HAL_JSON_VALUE,
+                    schema = @Schema(implementation = Producto.class)
+            ))
     })
-    public ResponseEntity<List<Producto>> findAll(){
-        List<Producto> productos = this.productoService.findAll();
+    public ResponseEntity<CollectionModel<EntityModel<Producto>>> findAll() {
+        List<EntityModel<Producto>> entityModels = this.productoService.findAll()
+                .stream()
+                .map(productoModelAssembler::toModel)
+                .toList();
+
+        CollectionModel<EntityModel<Producto>> collectionModel = CollectionModel.of(
+                entityModels,
+                linkTo(methodOn(ProductoControllerV2.class).findAll()).withSelfRel()
+        );
+
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(productos);
+                .body(collectionModel);
     }
 
 
 
 
 
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}", produces = MediaTypes.HAL_JSON_VALUE)
     @Operation(summary = "Endpoint que obtiene un producto por id",
     description = "Endpoint que va a devolver un producto.class al momento de buscarlo por id")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
-            description = "obtencion por id correcta"),
+            description = "obtencion por id correcta",
+            content = @Content(
+                    mediaType = MediaTypes.HAL_JSON_VALUE,
+                    schema = @Schema(implementation = Producto.class)
+            )),
             @ApiResponse(
                     responseCode = "404",
                     description = "Error el producto con  id ingresada no existe",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ProductoException.class)
+                            schema = @Schema(implementation = ErrorDTO.class)
                             //examples = @ExampleObject(
                             //        name = "ERROR NOT FOUND",
                             //        value = "{\"status\":\"200\",\"error\":\"producto no encontrado\"}"
@@ -81,12 +104,14 @@ public class ProductoController {
             )
     })
 
-    public ResponseEntity<Producto> findById(@PathVariable Long id){
-        Producto producto = this.productoService.findById(id);
+    public ResponseEntity<EntityModel<Producto>>  findById(@PathVariable Long id){
+        EntityModel<Producto> entityModel = this.productoModelAssembler.toModel(
+                this.productoService.findById(id)
+        );
+
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(producto);
-
+                .body(entityModel);
     }
 
 

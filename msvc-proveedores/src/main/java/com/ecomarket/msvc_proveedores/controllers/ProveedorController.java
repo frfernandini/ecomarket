@@ -66,13 +66,18 @@ public class ProveedorController {
             ),
             @ApiResponse(
                     responseCode = "404",
-                    description = "Error cuando el proveedor con id ingresada no existe"
+                    description = "Error cuando el proveedor con id ingresada no existe",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorDTO.class)
+                    )
             )
     })
     @Parameters(value = {
             @Parameter(
                     name = "id",
-                    description = "Primary key - entidad proveedor"
+                    description = "Primary key - entidad proveedor",
+                    required = true
             )
     })
     public ResponseEntity<Proveedor> findById(@PathVariable Long id) {
@@ -84,7 +89,7 @@ public class ProveedorController {
     @PostMapping
     @Operation(
             summary = "Endpoint guardado de un proveedor",
-            description = "Endpoint que se permite guardar un elemento proveedor.class dentro de nuestra base de datos"
+            description = "Endpoint que  permite guardar un elemento proveedor.class dentro de nuestra base de datos"
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201",description = "creacion exitosa"),
@@ -96,7 +101,7 @@ public class ProveedorController {
             @ApiResponse(responseCode = "409",description = "el elemento que intentas crear ya existe")
     })
     @io.swagger.v3.oas.annotations.parameters.RequestBody(
-            description = "Estructura de datos que me permite realizar la creacion de un proveedor",
+            description = "Estructura de datos que  permite realizar la creacion de un proveedor",
             content = @Content(
                     mediaType = "application/json",
                     schema = @Schema(implementation = Proveedor.class)
@@ -133,6 +138,13 @@ public class ProveedorController {
                     mediaType = "application/json",
                     schema = @Schema(implementation = ErrorDTO.class)
             ))
+    })
+    @Parameters(value = {
+            @Parameter(
+                    name = "id",
+                    description = "Primary key - entidad proveedor",
+                    required = true
+            )
     })
     public ResponseEntity<Proveedor> update(@PathVariable Long id, @Valid @RequestBody Proveedor proveedor) {
         return ResponseEntity
