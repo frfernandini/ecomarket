@@ -30,7 +30,7 @@ import java.util.List;
 @RestController
 @RequestMapping("api/v1/productos")
 @Validated
-@Tag(name = "producto API",description = "aqio se generan todos los metodos CRUD para producto")
+@Tag(name = "producto API",description = "aqui se generan todos los metodos CRUD para producto")
 public class ProductoController {
 
     @Autowired

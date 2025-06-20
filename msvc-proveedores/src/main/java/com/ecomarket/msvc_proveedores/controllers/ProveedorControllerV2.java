@@ -29,7 +29,7 @@ import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 @RestController
-@RequestMapping("api/v2/proveedores")
+@RequestMapping("api/v2 /proveedores")
 @Validated
 @Tag(
         name = "Proveedor API",

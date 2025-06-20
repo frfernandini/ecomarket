@@ -1,6 +1,7 @@
 package com.cjohao.msvc.usuarios.msvc_usuarios.controllers;
 
 
+import com.cjohao.msvc.usuarios.msvc_usuarios.assemblers.UsuarioModelAssembler;
 import com.cjohao.msvc.usuarios.msvc_usuarios.dtos.ErrorDTO;
 import com.cjohao.msvc.usuarios.msvc_usuarios.models.Usuarios;
 import com.cjohao.msvc.usuarios.msvc_usuarios.services.UsuarioService;
@@ -14,29 +15,36 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.codec.support.DefaultServerCodecConfigurer;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.swing.plaf.SeparatorUI;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 @RestController
-@RequestMapping("api/v1/usuarios")
+@RequestMapping("api/v2/usuarios")
 @Validated
 @Tag(
         name = "usuario API",
         description = "aqui se generan todos los metodos CRUD para usuario"
 )
-public class UsuarioController {
+public class UsuarioControllerV2 {
 
 
     @Autowired
     public UsuarioService usuarioService;
 
-    @GetMapping
+    @Autowired
+    private UsuarioModelAssembler usuarioModelAssembler;
+
+    @GetMapping(produces = MediaTypes.HAL_JSON_VALUE)
     @Operation(
             summary = "Endpoint que obtiene todos los usuarios",
             description = "Este Endpoint devuelve una lista de todos los usuarios que se encuentras en la base de datos"
@@ -44,16 +52,29 @@ public class UsuarioController {
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Operacion de extraccion de usuarios exitosa"
+                    description = "Operacion de extraccion de usuarios exitosa",
+                    content = @Content(
+                            mediaType = MediaTypes.HAL_JSON_VALUE,
+                            schema = @Schema(implementation = Usuarios.class)
+                    )
             )
     })
-    public ResponseEntity<List<Usuarios>> findByAll() {
+    public ResponseEntity<CollectionModel<EntityModel<Usuarios>>> findByAll() {
+        List<EntityModel<Usuarios>> entityModels = this.usuarioService.findAll()
+                .stream()
+                .map(usuarioModelAssembler::toModel)
+                .toList();
+        CollectionModel<EntityModel<Usuarios>> collectionModel = CollectionModel.of(
+                entityModels,
+                linkTo(methodOn(UsuarioControllerV2.class).findByAll()).withSelfRel()
+        );
+
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(usuarioService.findAll());
+                .body(collectionModel);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}",produces = MediaTypes.HAL_JSON_VALUE)
     @Operation(
             summary = "Endpoint que devuelve un usuario por id",
             description = "Endpoint que va a devolver un usuario.class al momento de buscarlo por id"
@@ -61,7 +82,11 @@ public class UsuarioController {
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "obtencion por id correcta"
+                    description = "obtencion por id correcta",
+                    content = @Content(
+                            mediaType = MediaTypes.HAL_JSON_VALUE,
+                            schema = @Schema(implementation = Usuarios.class)
+                    )
             ),
             @ApiResponse(
                     responseCode = "404",
@@ -79,10 +104,14 @@ public class UsuarioController {
                     required = true
             )
     })
-    public ResponseEntity<Usuarios> findById(@PathVariable Long id) {
+    public ResponseEntity<EntityModel<Usuarios>> findById(@PathVariable Long id) {
+        EntityModel<Usuarios> entityModel = usuarioModelAssembler.toModel(
+                this.usuarioService.findById(id)
+        );
+
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(usuarioService.findById(id));
+                .body(entityModel);
     }
 
     @GetMapping("/run/{runUsuario}")
