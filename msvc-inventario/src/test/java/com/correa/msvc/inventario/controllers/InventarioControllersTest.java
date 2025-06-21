@@ -21,7 +21,7 @@ public class InventarioControllersTest {
 
     @Test
     @DisplayName("Debe entregar un listado de todos los Inventarios")
-    public void shouldReturnAllProveedoresWhenListIsRequired(){
+    public void shouldReturnAllInventariosWhenListIsRequired(){
         ResponseEntity<String> response = restTemplate.getForEntity("/api/v1/inventarios", String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
