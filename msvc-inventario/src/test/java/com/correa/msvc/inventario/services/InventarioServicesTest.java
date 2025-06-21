@@ -52,7 +52,7 @@ public class InventarioServicesTest {
     }
     @Test
     @DisplayName("Encontrar un inventraio por ID")
-    public void shouldFindAllProveedores(){
+    public void shouldFindAllInventarios(){
         when(inventarioRepository.findById(1L)).thenReturn(Optional.of(inventarioPrueba));
         Inventario result= inventarioService.findById(1L);
         assertThat(result).isNotNull();
