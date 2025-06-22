@@ -1,5 +1,7 @@
 package com.jcandia.msvc.ventas.msvc_ventas.controllers;
 
+import com.jcandia.msvc.ventas.msvc_ventas.assemblers.ListaVentasUsuarioDTOModelAssembler;
+import com.jcandia.msvc.ventas.msvc_ventas.assemblers.VentaModelAssembler;
 import com.jcandia.msvc.ventas.msvc_ventas.dto.ErrorDTO;
 import com.jcandia.msvc.ventas.msvc_ventas.dto.ListaVentasUsuarioDTO;
 import com.jcandia.msvc.ventas.msvc_ventas.exceptions.GlobalHandlerException;
@@ -14,30 +16,38 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.bouncycastle.jcajce.spec.RawEncodedKeySpec;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.swing.plaf.SeparatorUI;
 import java.util.List;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+
 @RestController
-@RequestMapping("/api/v1/ventas")
+@RequestMapping("/api/v2/ventas")
 @Validated
 @Tag(
         name = "Venta API",
         description = "aqui se generan todos los metodos CRUD para venta"
 )
-public class VentaController {
+public class VentaControllerV2 {
 
     @Autowired
     private VentaService ventaService;
 
-    @GetMapping
+    @Autowired
+    private VentaModelAssembler ventaModelAssembler;
+
+    @Autowired
+    private ListaVentasUsuarioDTOModelAssembler listaVentasUsuarioDTOModelAssembler;
+
+    @GetMapping(produces = MediaTypes.HAL_JSON_VALUE)
     @Operation(
             summary = "Endpoint que obtien todos las ventas",
             description = "Este endpoint devuelve en un list todos las ventas que se encuentren en la base de datos"
@@ -45,16 +55,28 @@ public class VentaController {
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Operacion de extracion de ventas exitosa"
+                    description = "Operacion de extracion de ventas exitosa",
+                    content = @Content(
+                            mediaType = MediaTypes.HAL_JSON_VALUE,
+                            schema = @Schema(implementation = Ventas.class)
+                    )
             )
     })
-    public ResponseEntity<List<Ventas>> findByAll() {
+    public ResponseEntity<CollectionModel<EntityModel<Ventas>>> findByAll() {
+        List<EntityModel<Ventas>>entityModels = this.ventaService.findAll()
+                .stream()
+                .map(ventaModelAssembler::toModel)
+                .toList();
+        CollectionModel<EntityModel<Ventas>> collectionModel = CollectionModel.of(
+                entityModels,
+                linkTo(methodOn(VentaControllerV2.class).findByAll()).withSelfRel()
+        );
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(ventaService.findAll());
+                .body(collectionModel);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}",produces = MediaTypes.HAL_JSON_VALUE)
     @Operation(
             summary = "Endpoint que devuelve una venta por id",
             description = "Endpoint que va a devolver una venta.class al momento de buscarlo por id"
@@ -62,7 +84,11 @@ public class VentaController {
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "obtencion por id correcta"
+                    description = "obtencion por id correcta",
+                    content = @Content(
+                            mediaType = MediaTypes.HAL_JSON_VALUE,
+                            schema = @Schema(implementation = Ventas.class)
+                    )
             ),
             @ApiResponse(
                     responseCode = "404",
@@ -80,10 +106,15 @@ public class VentaController {
                     required = true
             )
     })
-    public ResponseEntity<Ventas> findById(@PathVariable Long id) {
+    public ResponseEntity<EntityModel<Ventas>> findById(@PathVariable Long id) {
+
+        EntityModel<Ventas> entityModel = this.ventaModelAssembler.toModel(
+                this.ventaService.findById(id)
+        );
+
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(ventaService.findById(id));
+                .body(entityModel);
     }
 
 

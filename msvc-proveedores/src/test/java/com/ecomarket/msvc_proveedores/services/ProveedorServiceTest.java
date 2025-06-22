@@ -45,7 +45,7 @@ public class ProveedorServiceTest {
             Proveedor proveedor = new Proveedor();
             LocalDate fecha = faker.timeAndDate().birthday();
             proveedor.setNombre(faker.commerce().vendor());
-            proveedor.setProveedoId(faker.number().numberBetween(1L, 100L));
+            proveedor.setProveedoId((long) i+1);
             proveedor.setDireccion(faker.address().fullAddress());
             proveedor.setTelefono(faker.phoneNumber().phoneNumber());
             proveedor.setFechaIngreso(fecha);
