@@ -33,7 +33,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 @RequestMapping("/api/v2/ventas")
 @Validated
 @Tag(
-        name = "Venta API",
+        name = "Venta AP HATEOAS",
         description = "aqui se generan todos los metodos CRUD para venta"
 )
 public class VentaControllerV2 {

@@ -32,7 +32,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 @RequestMapping("api/v2/usuarios")
 @Validated
 @Tag(
-        name = "usuario API",
+        name = "usuario API HATEOAS",
         description = "aqui se generan todos los metodos CRUD para usuario"
 )
 public class UsuarioControllerV2 {
@@ -133,13 +133,6 @@ public class UsuarioControllerV2 {
                     )
             )
     })
-    @Parameters(value = {
-            @Parameter(
-                    name = "run",
-                    description = "atributo run - entidad usuario",
-                    required = true
-            )
-    })
     public ResponseEntity<Usuarios> findByRun(@PathVariable String runUsuario) {
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -153,7 +146,7 @@ public class UsuarioControllerV2 {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201",description = "gurdado exitoso"),
-            @ApiResponse(responseCode = "400",description = "hay un elemento falta en la creacion del objeto",
+            @ApiResponse(responseCode = "400",description = "hay un elemento faltante en la creacion del objeto",
             content = @Content(
                     mediaType = "application/json",
                     schema = @Schema(implementation = ErrorDTO.class)
@@ -189,6 +182,12 @@ public class UsuarioControllerV2 {
                             schema = @Schema(implementation = ErrorDTO.class)
                     )
             ),
+            @ApiResponse(responseCode = "404",
+            description = "usuario no encontrado",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ErrorDTO.class)
+            )),
             @ApiResponse(responseCode = "500",
             description = "no se esta respetando un constraint o la estructura de los datos no es la correcta",
             content = @Content(

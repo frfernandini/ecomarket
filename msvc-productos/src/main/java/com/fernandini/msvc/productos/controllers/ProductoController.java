@@ -105,7 +105,8 @@ public class ProductoController {
                     mediaType = "application/json",
                     schema = @Schema(implementation = GlobalHandlerException.class)
             )),
-            @ApiResponse(responseCode = "409",description = "el elemento que intentas crear ya existe")
+            @ApiResponse(responseCode = "409",description = "el elemento que intentas crear ya existe"),
+            @ApiResponse(responseCode = "400",description = "falta informacion en la estructura del objeto")
     })
     @io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "Estructura de datos que me permite realizar la creacion de un producto",
