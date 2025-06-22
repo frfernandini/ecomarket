@@ -28,7 +28,7 @@ public class SucursalServicesTest {
     private SucursalRepository sucursalRepository;
 
     @InjectMocks
-    private SucursalService sucursalService;
+    private SucursalServiceImpl sucursalService;
 
     private List<Sucursal> sucursalList = new ArrayList<>();
 
@@ -48,6 +48,18 @@ public class SucursalServicesTest {
             this.sucursalList.add(sucursal);
         }
         this.sucursalPrueba = this.sucursalList.get(0);
+    }
+
+
+    @Test
+    @DisplayName("devuelve todas las sucursales")
+    public void shouldFindAll(){
+        when(sucursalRepository.findAll()).thenReturn(this.sucursalList);
+        List<Sucursal> result = this.sucursalService.findAll();
+        assertThat(result).hasSize(100);
+        assertThat(result).contains(this.sucursalPrueba);
+
+        verify(sucursalRepository, times(1)).findAll();
     }
     @Test
     @DisplayName("Encontrar una Sucursal por ID")
@@ -69,7 +81,7 @@ public class SucursalServicesTest {
         assertThatThrownBy(() -> {
             sucursalService.findById(idInexistente);
         }).isInstanceOf(SucursalException.class)
-                .hasMessageContaining("No se encontro la Sucursal: "+idInexistente);
+                .hasMessageContaining("No se encontro el sucursal con id: " + idInexistente);
         verify(sucursalRepository,times(1)).findById(idInexistente);
 
     }
