@@ -1,5 +1,7 @@
 package com.correa.msvc.inventario.services;
 
+import com.correa.msvc.inventario.clients.ProductoClientRest;
+import com.correa.msvc.inventario.clients.SucursalClientRest;
 import com.correa.msvc.inventario.exceptions.InventarioException;
 import com.correa.msvc.inventario.models.entities.Inventario;
 import com.correa.msvc.inventario.repositories.InventarioRepository;
@@ -27,8 +29,14 @@ public class InventarioServicesTest {
     @Mock
     private InventarioRepository inventarioRepository;
 
+    @Mock
+    private ProductoClientRest productoClientRest;
+
+    @Mock
+    private SucursalClientRest sucursalClientRest;
+
     @InjectMocks
-    private InventarioService inventarioService;
+    private InventarioServicelmpl inventarioService;
 
     private List<Inventario> inventarioList = new ArrayList<>();
 
@@ -41,7 +49,7 @@ public class InventarioServicesTest {
 
             Inventario inventario = new Inventario();
             LocalDate fecha = faker.timeAndDate().birthday();
-
+            inventario.setInventarioId((long)i+1);
             inventario.setCantidadInventario(faker.number().numberBetween(1,1000));
             inventario.setFechaIngresoProducto(fecha);
             inventario.setIdProducto(faker.number().numberBetween(1L,10L));
@@ -50,9 +58,21 @@ public class InventarioServicesTest {
         }
         this.inventarioPrueba= this.inventarioList.get(0);
     }
+
+
     @Test
-    @DisplayName("Encontrar un inventraio por ID")
-    public void shouldFindAllInventarios(){
+    @DisplayName("devuelve todos los inventarios")
+    public void shouldFindAll(){
+        when(inventarioRepository.findAll()).thenReturn(this.inventarioList);
+        List<Inventario> result = inventarioService.findAll();
+        assertThat(result).hasSize(100);
+        assertThat(result).contains(this.inventarioPrueba);
+
+        verify(inventarioRepository, times(1)).findAll();
+    }
+    @Test
+    @DisplayName("Encontrar un inventario por ID")
+    public void shouldFindInventarioById(){
         when(inventarioRepository.findById(1L)).thenReturn(Optional.of(inventarioPrueba));
         Inventario result= inventarioService.findById(1L);
         assertThat(result).isNotNull();
@@ -66,14 +86,14 @@ public class InventarioServicesTest {
     }
     @Test
     @DisplayName("Encontrar por id un Inventario que no existe")
-    public void shouldSaveInventario(){
+    public void shouldNotFindInventarioById(){
         Long idInexistente= 1L;
        when(inventarioRepository.findById(idInexistente)).thenReturn(Optional.empty());
 
        assertThatThrownBy(() ->  {
            inventarioService.findById(idInexistente);
        }).isInstanceOf(InventarioException.class)
-               .hasMessageContaining("No se encontro el id del inventario"+idInexistente);
+               .hasMessageContaining("No se encontro el id "+idInexistente+" en la base de datos");
        verify(inventarioRepository, times(1)).findById(idInexistente);
 
     }
