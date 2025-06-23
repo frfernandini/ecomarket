@@ -112,6 +112,11 @@ public class InventarioController {
     }
 
     @PutMapping("/descontar-stock/{idProducto}")
+    @Operation(summary = "descontar un inventario", description = "Descuenta un inventario po su código")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",description = "Inventario descontado exitosamente"),
+            @ApiResponse(responseCode = "404",description = "Inventario no encontrado")
+    })
     public ResponseEntity<Inventario> descontarStock(@PathVariable Long idProducto, @Valid @RequestBody Integer cantidadVentas) {
         return ResponseEntity
                 .status(HttpStatus.OK)
