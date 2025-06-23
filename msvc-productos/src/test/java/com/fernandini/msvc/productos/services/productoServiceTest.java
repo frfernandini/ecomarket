@@ -82,7 +82,7 @@ public class productoServiceTest {
     }
 
     @Test
-    @DisplayName("Encontrar por id un medico que no existe")
+    @DisplayName("Encontrar por id un producto que no existe")
     public void shouldNotFindProductoById(){
         Long idInexistente = 999L;
         when(productoRepository.findById(idInexistente)).thenReturn(Optional.empty());

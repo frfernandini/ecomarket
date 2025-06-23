@@ -15,8 +15,7 @@ public class ProveedorModelAssembler implements RepresentationModelAssembler<Pro
         return EntityModel.of(
                 entity,
                 linkTo(methodOn(ProveedorControllerV2.class).findById(entity.getProveedoId())).withSelfRel(),
-                linkTo(methodOn(ProveedorControllerV2.class).findAll()).withRel("proveedores"),
-                Link.of("http://localhost:8085/api/v2/productos/" + entity.getProveedoId()).withRel("productos")
+                linkTo(methodOn(ProveedorControllerV2.class).findAll()).withRel("proveedores")
 
         );
     }

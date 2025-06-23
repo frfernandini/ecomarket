@@ -8,8 +8,7 @@ import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 @Component
 public class InventarioModelAssembler implements RepresentationModelAssembler<Inventario , EntityModel<Inventario>> {
@@ -19,7 +18,8 @@ public class InventarioModelAssembler implements RepresentationModelAssembler<In
                 entity,
                 linkTo(methodOn(InventarioControllerV2.class).findById(entity.getInventarioId())).withSelfRel(),
                 linkTo(methodOn(InventarioControllerV2.class).findAll()).withRel("inventarios"),
-                Link.of("http://localhost:8089/api/v2/inventarios/" + entity.getInventarioId()).withRel("inventario")
+                Link.of("http://localhost:8085/api/v2/productos/" + entity.getInventarioId()).withRel("productos"),
+                Link.of("http://localhost:8086/api/v2/sucursales"+ entity.getIdSucursal()).withRel("sucursales")
         );
     }
 

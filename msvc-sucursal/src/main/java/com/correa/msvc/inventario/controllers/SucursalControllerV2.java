@@ -156,7 +156,7 @@ public class SucursalControllerV2 {
     public ResponseEntity<Sucursal> update(@PathVariable Long id, @Valid @RequestBody Sucursal sucursal) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(this.sucursalService.update(id,sucursal));
+                .body(this.sucursalService.update(sucursal,id));
     }
     @DeleteMapping("/{id}")
     @Operation(

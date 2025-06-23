@@ -17,8 +17,7 @@ public class SucursalModelAssembler implements RepresentationModelAssembler<Sucu
         return EntityModel.of(
                 entity,
                 linkTo(methodOn(SucursalControllerV2.class).findById(entity.getSucursalId())).withSelfRel(),
-                linkTo(methodOn(SucursalControllerV2.class).findAll()).withRel("sucursales"),
-                Link.of("http://localhost:8086/api/v2/sucursales/" + entity.getSucursalId()).withRel("sucursal")
+                linkTo(methodOn(SucursalControllerV2.class).findAll()).withRel("sucursales")
         );
     }
 }
