@@ -86,9 +86,34 @@ public class UsuarioServicesTest {
     }
 
     @Test
+    @DisplayName("Encontrar usuario por run")
+    public void shouldFindUsuarioByRun() {
+        String runExistente = usuariosPrueba.getRun();
+        when(usuarioRepository.findByRun(runExistente)).thenReturn(Optional.of(usuariosPrueba));
+
+        Usuarios result = usuarioServices.findByRun(runExistente);
+        assertThat(result).isNotNull();
+        assertThat(result).isEqualTo(this.usuariosPrueba);
+
+        verify(usuarioRepository, times(1)).findByRun(runExistente);
+    }
+
+    @Test
+    @DisplayName("encontrar por run un usuario que no existe")
+    public void shouldThrowExceptionWhenRunNotFound() {
+        String runInexistente = "12345678-9";
+        when(usuarioRepository.findByRun(runInexistente)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> usuarioServices.findByRun(runInexistente))
+                .isInstanceOf(UsuarioExceptions.class)
+                .hasMessage("El usuario con run " + runInexistente + " no existe");
+        verify(usuarioRepository, times(1)).findByRun(runInexistente);
+    }
+
+    @Test
     @DisplayName("Encontrar por id un Usuario que no existe")
     public void shouldNotFindUsuarioById() {
-        Long idInexistente = 1L;
+        Long idInexistente = 999L;
         when(usuarioRepository.findById(idInexistente)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> {
@@ -106,5 +131,56 @@ public class UsuarioServicesTest {
         assertThat(result).isNotNull();
         assertThat(result).isEqualTo(this.usuariosPrueba);
         verify(usuarioRepository, times(1)).save(any(Usuarios.class));
+    }
+    @Test
+    @DisplayName("Eliminar usuario por ID existente")
+    public void shouldDeleteUsuarioById() {
+        Long idExistente = 1L;
+        doNothing().when(usuarioRepository).deleteById(idExistente);
+
+        usuarioServices.deleteById(idExistente);
+        verify(usuarioRepository, times(1)).deleteById(idExistente);
+    }
+    @Test
+    @DisplayName("Actualizar usuario existente")
+    public void shouldUpdateUsuario() {
+        Long idExistente = 1L;
+        Usuarios usuarioActualizado = new Usuarios();
+        usuarioActualizado.setRun("98765432-1");
+        usuarioActualizado.setNombresUsuario("NuevoNombre");
+
+        when(usuarioRepository.findById(idExistente)).thenReturn(Optional.of(usuariosPrueba));
+        when(usuarioRepository.save(any(Usuarios.class))).thenReturn(usuarioActualizado);
+
+        Usuarios result = usuarioServices.update(idExistente, usuarioActualizado);
+        assertThat(result.getNombresUsuario()).isEqualTo("NuevoNombre");
+        verify(usuarioRepository, times(1)).findById(idExistente);
+        verify(usuarioRepository, times(1)).save(any(Usuarios.class));
+    }
+
+    @Test
+    @DisplayName("actualizar usuario con ID inexistente")
+    public void shouldThrowExceptionWhenUpdateWithInvalidId() {
+        Long idInexistente = 9999L;
+        Usuarios usuarioActualizado = new Usuarios();
+
+        when(usuarioRepository.findById(idInexistente)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> usuarioServices.update(idInexistente, usuarioActualizado))
+                .isInstanceOf(UsuarioExceptions.class)
+                .hasMessage("El usuario con id " + idInexistente + " no existe");
+        verify(usuarioRepository, times(1)).findById(idInexistente);
+        verify(usuarioRepository, never()).save(any());
+    }
+    @Test
+    @DisplayName("Lanzar excepción al guardar usuario con RUN duplicado")
+    public void shouldThrowExceptionWhenRunIsDuplicate() {
+        when(usuarioRepository.findByRun(usuariosPrueba.getRun())).thenReturn(Optional.of(usuariosPrueba));
+
+        assertThatThrownBy(() -> usuarioServices.save(usuariosPrueba))
+                .isInstanceOf(UsuarioExceptions.class)
+                .hasMessage("El usuario con este RUN ya existe");
+        verify(usuarioRepository, times(1)).findByRun(usuariosPrueba.getRun());
+        verify(usuarioRepository, never()).save(any());
     }
 }

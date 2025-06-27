@@ -80,7 +80,7 @@ public class ProveedorServiceTest {
     @Test
     @DisplayName("Encontrar por id un proveedor que no existe")
     public void shouldNotFindProveedorById() {
-        Long idInexistente = 1L;
+        Long idInexistente = 999L;
         when(proveedorRepository.findById(idInexistente)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> {
@@ -98,5 +98,61 @@ public class ProveedorServiceTest {
         assertThat(result).isNotNull();
         assertThat(result).isEqualTo(this.proveedorprueba);
         verify(proveedorRepository, times(1)).save(any(Proveedor.class));
+    }
+    @Test
+    @DisplayName("guardar un proveedor ya existente")
+    public void shouldThrowExceptionWhenSavingExistingProveedor() {
+        when(proveedorRepository.findByNombre(proveedorprueba.getNombre()))
+                .thenReturn(Optional.of(proveedorprueba));
+
+        assertThatThrownBy(() -> proveedorService.save(proveedorprueba))
+                .isInstanceOf(ProveedorException.class)
+                .hasMessage("Proveedor ya existe");
+
+        verify(proveedorRepository, times(1)).findByNombre(proveedorprueba.getNombre());
+        verify(proveedorRepository, never()).save(any());
+    }
+    @Test
+    @DisplayName("Debería eliminar proveedor por ID")
+    public void shouldDeleteProveedorById() {
+        doNothing().when(proveedorRepository).deleteById(1L);
+
+        proveedorService.deleteById(1L);
+
+        verify(proveedorRepository, times(1)).deleteById(1L);
+    }
+
+    @Test
+    @DisplayName("Debería actualizar proveedor existente")
+    public void shouldUpdateProveedor() {
+        Proveedor proveedorActualizado = new Proveedor();
+        proveedorActualizado.setNombre("Nuevo Nombre");
+        proveedorActualizado.setCorreo("nuevo@correo.com");
+
+        when(proveedorRepository.findById(1L)).thenReturn(Optional.of(proveedorprueba));
+        when(proveedorRepository.save(any(Proveedor.class))).thenReturn(proveedorActualizado);
+
+        Proveedor result = proveedorService.update(1L, proveedorActualizado);
+
+        assertThat(result.getNombre()).isEqualTo("Nuevo Nombre");
+        assertThat(result.getCorreo()).isEqualTo("nuevo@correo.com");
+        verify(proveedorRepository, times(1)).findById(1L);
+        verify(proveedorRepository, times(1)).save(any(Proveedor.class));
+    }
+
+    @Test
+    @DisplayName("actualizar proveedor inexistente")
+    public void shouldThrowExceptionWhenUpdatingNonExistingProveedor() {
+        Long idInexistente = 999L;
+        Proveedor proveedorActualizado = new Proveedor();
+
+        when(proveedorRepository.findById(idInexistente)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> proveedorService.update(idInexistente, proveedorActualizado))
+                .isInstanceOf(ProveedorException.class)
+                .hasMessage("Proveedor no encontrado");
+
+        verify(proveedorRepository, times(1)).findById(idInexistente);
+        verify(proveedorRepository, never()).save(any());
     }
 }

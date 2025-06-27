@@ -63,7 +63,7 @@ public class SucursalServicesTest {
     }
     @Test
     @DisplayName("Encontrar una Sucursal por ID")
-    public void shouldFindAllSucursal() {
+    public void shouldFindSucursalById() {
         when(sucursalRepository.findById(1L)).thenReturn(Optional.of(sucursalPrueba));
         Sucursal result = sucursalService.findById(1L);
         assertThat(result).isNotNull();
@@ -75,7 +75,7 @@ public class SucursalServicesTest {
     @Test
     @DisplayName("Encontrar por id una Sucursal que no existe")
     public void shouldSaveSucursal() {
-        Long idInexistente= 1L;
+        Long idInexistente= 999L;
         when(sucursalRepository.findById(idInexistente)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> {
@@ -94,6 +94,63 @@ public class SucursalServicesTest {
         assertThat(result).isEqualTo(this.sucursalPrueba);
         verify(sucursalRepository,times(1)).save(any(Sucursal.class));
 
+    }
+
+    @Test
+    @DisplayName("guardar sucursal ya existente")
+    public void shouldThrowExceptionWhenSavingExistingTienda() {
+        when(sucursalRepository.findByTienda(sucursalPrueba.getTienda()))
+                .thenReturn(Optional.of(sucursalPrueba));
+
+        assertThatThrownBy(() -> sucursalService.save(sucursalPrueba))
+                .isInstanceOf(SucursalException.class)
+                .hasMessage("La tienda ya existe");
+
+        verify(sucursalRepository, times(1)).findByTienda(sucursalPrueba.getTienda());
+        verify(sucursalRepository, never()).save(any());
+    }
+
+    @Test
+    @DisplayName("Debería eliminar sucursal por ID")
+    public void shouldDeleteSucursalById() {
+        doNothing().when(sucursalRepository).deleteById(1L);
+
+        sucursalService.deleteById(1L);
+
+        verify(sucursalRepository, times(1)).deleteById(1L);
+    }
+    @Test
+    @DisplayName("Debería actualizar sucursal existente")
+    public void shouldUpdateSucursal() {
+        Sucursal sucursalActualizada = new Sucursal();
+        sucursalActualizada.setTienda("Nueva Tienda");
+        sucursalActualizada.setTelefono("+56 9 1234 5678");
+
+        when(sucursalRepository.findById(1L)).thenReturn(Optional.of(sucursalPrueba));
+        when(sucursalRepository.save(any(Sucursal.class))).thenReturn(sucursalActualizada);
+
+        Sucursal result = sucursalService.update(sucursalActualizada, 1L);
+
+        assertThat(result.getTienda()).isEqualTo("Nueva Tienda");
+        assertThat(result.getTelefono()).isEqualTo("+56 9 1234 5678");
+        verify(sucursalRepository, times(1)).findById(1L);
+        verify(sucursalRepository, times(1)).save(any(Sucursal.class));
+    }
+
+    @Test
+    @DisplayName("actualizar sucursal inexistente")
+    public void shouldThrowExceptionWhenUpdatingNonExistingSucursal() {
+        Long idInexistente = 999L;
+        Sucursal sucursalActualizada = new Sucursal();
+
+        when(sucursalRepository.findById(idInexistente)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> sucursalService.update(sucursalActualizada, idInexistente))
+                .isInstanceOf(SucursalException.class)
+                .hasMessage("No se encontro la sucursal");
+
+        verify(sucursalRepository, times(1)).findById(idInexistente);
+        verify(sucursalRepository, never()).save(any());
     }
 }
 
