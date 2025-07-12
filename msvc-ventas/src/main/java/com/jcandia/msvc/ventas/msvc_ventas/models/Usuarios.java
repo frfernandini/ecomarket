@@ -16,4 +16,6 @@ public class Usuarios {
     private String nombresUsuario;
     private String apellidosUsuario;
     private String correoUsuario;
+    private String contraseña;
+    private LocalDate registroUsuario;
 }

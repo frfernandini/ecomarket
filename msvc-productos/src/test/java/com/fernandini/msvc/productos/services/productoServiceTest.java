@@ -58,6 +58,7 @@ public class productoServiceTest {
         proveedorPrueba.setTelefono(faker.phoneNumber().phoneNumber());
         proveedorPrueba.setCorreo(faker.internet().emailAddress());
         proveedorPrueba.setFechaIngreso(faker.timeAndDate().birthday());
+
         for (int i=0;i<100;i++){
             Producto producto = new Producto();
             producto.setProductoId((long)i+1);
@@ -74,7 +75,8 @@ public class productoServiceTest {
     @Test
     @DisplayName("debe crear un producto")
     public void shoudlCreateProducto(){
-        when(proveedorClientRest.findById(1L)).thenReturn(this.proveedorPrueba);
+        Long proveedorId = productoPrueba.getProveedorId();
+        when(proveedorClientRest.findById(proveedorId)).thenReturn(this.proveedorPrueba);
         when(productoRepository.save(any(Producto.class))).thenReturn(this.productoPrueba);
 
         Producto result = productoService.save(this.productoPrueba);
@@ -83,7 +85,7 @@ public class productoServiceTest {
         assertThat(result).isEqualTo(this.productoPrueba);
         assertThat(result.getProveedorId()).isEqualTo(proveedorPrueba.getId());
 
-        verify(proveedorClientRest, times(1)).findById(1L);
+        verify(proveedorClientRest, times(1)).findById(productoPrueba.getProveedorId());
         verify(productoRepository, times(1)).save(any(Producto.class));
     }
 

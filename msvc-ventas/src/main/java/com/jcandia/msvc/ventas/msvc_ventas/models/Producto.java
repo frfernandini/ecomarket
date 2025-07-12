@@ -8,8 +8,11 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Producto {
-
     private Long productoId;
     private String nombreProducto;
-    private Double precioProducto;
+    private String descProducto;
+    private double precioProducto;
+    private String categoriaProducto;
+    private Long proveedorId;
+
 }

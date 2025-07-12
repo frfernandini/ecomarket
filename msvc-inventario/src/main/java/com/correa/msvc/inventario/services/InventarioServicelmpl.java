@@ -44,7 +44,7 @@ public class InventarioServicelmpl implements InventarioService{
             Sucursal sucursal = this.sucursalClientRest.findById(inventario.getIdSucursal());
             return this.inventarioRepository.save(inventario);
         }catch (FeignException ex){
-            throw new InventarioException(ex.getMessage());
+            throw new InventarioException("Sucursal o Producto no encontrado");
         }
     }
 
@@ -92,6 +92,8 @@ public class InventarioServicelmpl implements InventarioService{
         }
         return inventarioRepository.save(inventario);
     }
+
+
 
 
 }
