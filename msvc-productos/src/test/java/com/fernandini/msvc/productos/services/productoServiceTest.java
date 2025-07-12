@@ -6,6 +6,7 @@ import com.fernandini.msvc.productos.exceptions.ProductoException;
 import com.fernandini.msvc.productos.models.Producto;
 import com.fernandini.msvc.productos.models.Proveedor;
 import com.fernandini.msvc.productos.repositories.ProductoRepository;
+import feign.FeignException;
 import net.datafaker.Faker;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,28 +46,25 @@ public class productoServiceTest {
 
     private Proveedor proveedorPrueba;
 
-    Faker numeroaleatorio = new Faker(Locale.of("es","CL"));
+
     @BeforeEach
     public void setUp(){
         Faker faker = new Faker(Locale.of("es","CL"));
-        LocalDate fecha = faker.timeAndDate().birthday();
+
         proveedorPrueba = new Proveedor();
-        proveedorPrueba.setNombre(faker.commerce().vendor());
         proveedorPrueba.setId(1L);
         proveedorPrueba.setDireccion(faker.address().fullAddress());
+        proveedorPrueba.setNombre(faker.commerce().vendor());
         proveedorPrueba.setTelefono(faker.phoneNumber().phoneNumber());
-        proveedorPrueba.setFechaIngreso(fecha);
         proveedorPrueba.setCorreo(faker.internet().emailAddress());
-
-
+        proveedorPrueba.setFechaIngreso(faker.timeAndDate().birthday());
         for (int i=0;i<100;i++){
-
             Producto producto = new Producto();
             producto.setProductoId((long)i+1);
             producto.setNombreProducto(faker.commerce().productName());
             producto.setPrecioProducto(Double.valueOf(faker.commerce().price().replace(",",".")));
             producto.setDescProducto(faker.commerce().material());
-            producto.setProveedorId(proveedorPrueba.getId());
+            producto.setProveedorId(1L);
             producto.setCategoriaProducto(faker.commerce().department());
             this.productoList.add(producto);
         }
@@ -83,10 +81,12 @@ public class productoServiceTest {
 
         assertThat(result).isNotNull();
         assertThat(result).isEqualTo(this.productoPrueba);
+        assertThat(result.getProveedorId()).isEqualTo(proveedorPrueba.getId());
 
         verify(proveedorClientRest, times(1)).findById(1L);
         verify(productoRepository, times(1)).save(any(Producto.class));
     }
+
     @Test
     @DisplayName("Devuelve todos los productos")
     public void shouldFindAll(){
@@ -134,5 +134,62 @@ public class productoServiceTest {
         verify(proveedorClientRest, times(1)).findById(productoPrueba.getProveedorId());
         verify(productoRepository, times(1)).save(any(Producto.class));
     }
+    @Test
+    @DisplayName("Debería eliminar producto por ID")
+    public void shouldDeleteProductoById() {
+        Long idExistente = 1L;
+        doNothing().when(productoRepository).deleteById(idExistente);
+
+        productoService.deleteById(idExistente);
+
+        verify(productoRepository, times(1)).deleteById(idExistente);
+    }
+    @Test
+    @DisplayName("Debería actualizar producto cuando proveedor existe")
+    public void shouldUpdateProductoWhenProveedorExists() {
+        Producto productoActualizado = new Producto();
+        productoActualizado.setProveedorId(1L);
+        productoActualizado.setNombreProducto("Nuevo nombre");
+        productoActualizado.setPrecioProducto(9000.0);
+
+        when(proveedorClientRest.findById(1L)).thenReturn(proveedorPrueba);
+        when(productoRepository.findById(1L)).thenReturn(Optional.of(productoPrueba));
+        when(productoRepository.save(any(Producto.class))).thenReturn(productoActualizado);
+
+        Producto result = productoService.update(1L, productoActualizado);
+
+        assertThat(result.getNombreProducto()).isEqualTo("Nuevo nombre");
+        verify(proveedorClientRest, times(1)).findById(1L);
+        verify(productoRepository, times(1)).save(any(Producto.class));
+    }
+
+    @Test
+    @DisplayName("Debería lanzar excepción al actualizar con proveedor inexistente")
+    public void shouldThrowExceptionWhenUpdatingWithInvalidProveedor() {
+        Long proveedorInexistenteId = 999L;
+        Producto productoActualizado = new Producto();
+        productoActualizado.setProveedorId(proveedorInexistenteId);
+
+        when(proveedorClientRest.findById(proveedorInexistenteId))
+                .thenThrow(FeignException.NotFound.class);
+
+        assertThatThrownBy(() -> productoService.update(1L, productoActualizado))
+                .isInstanceOf(ProductoException.class)
+                .hasMessageContaining("el proveedor con id: " + proveedorInexistenteId);
+
+        verify(productoRepository, never()).save(any());
+    }
+    @Test
+    @DisplayName("Debería fallar al crear producto con proveedor inexistente")
+    public void shouldFailWhenProveedorNotExists() {
+        when(proveedorClientRest.findById(anyLong()))
+                .thenThrow(FeignException.NotFound.class);
+
+        assertThatThrownBy(() -> productoService.save(productoPrueba))
+                .isInstanceOf(ProductoException.class)
+                .hasMessageContaining("el proveedor con id: " + productoPrueba.getProveedorId());
+    }
+
+
 
 }

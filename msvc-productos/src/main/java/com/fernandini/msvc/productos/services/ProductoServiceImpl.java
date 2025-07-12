@@ -39,7 +39,7 @@ public class ProductoServiceImpl implements ProductoService{
             Proveedor proveedor = this.proveedorClientRest.findById(producto.getProveedorId());
             return this.productoRepository.save(producto);
         }catch (FeignException ex) {
-            throw new ProductoException(ex.getMessage());
+            throw new ProductoException("el proveedor con id: " + producto.getProveedorId() + " no está registrado");
         }
     }
     @Override
@@ -64,5 +64,7 @@ public class ProductoServiceImpl implements ProductoService{
                 () -> new ProductoException("Producto con id"+id+"no encontrado")
         );
     }
+
+
 
 }
